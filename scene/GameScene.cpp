@@ -11,9 +11,6 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	textureHandle_ = TextureManager::Load("tex1.png");
-	sprite_ = Sprite::Create(textureHandle_, {100, 50});
-	delete sprite_;
 }
 
 void GameScene::Update() {}
@@ -46,7 +43,6 @@ void GameScene::Draw() {
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
@@ -56,8 +52,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	sprite_->Draw();
-
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
