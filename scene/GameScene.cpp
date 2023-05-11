@@ -1,17 +1,34 @@
 #include "GameScene.h"
 #include "TextureManager.h"
+#include "WorldTransform.h"
 #include <cassert>
-
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	delete sprite_;
+	delete model_;
+	delete player_;
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	playerTh_ = TextureManager::Load("player.png");
+	sprite_ = Sprite::Create(playerTh_, {100, 50});
+
+	// 3Dモデルの生成
+	model_ = Model::Create();
+
+	// ビュープロジェクションの初期化
+	viewProjection_.Initialize();
+	// 自キャラの生成
+	player_ = new Player();
+	// 自キャラの初期化
+	player_->Initialize(model_, playerTh_);
 }
 
 void GameScene::Update() {
@@ -31,6 +48,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -45,6 +63,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	// 自キャラの描画
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

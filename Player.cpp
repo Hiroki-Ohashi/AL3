@@ -1,20 +1,21 @@
 #include "Player.h"
+#include "TextureManager.h"
+#include "WorldTransform.h"
 #include <cassert>
 
-
-
 void Player::Initialize(Model* model, uint32_t textureHandle) {
+
+	// NULLポインタチェック
 	assert(model);
-	model_ = model;
 	textureHandle_ = textureHandle;
-	// ワールドトランスフォームの初期化
-	worldTransform_->Initialize();
-}
+	model_ = model;
 
-void Player::Update() { 
-	worldTransform_->TransferMatrix();
+	worldTransform_.Initialize();
 }
-
-void Player::Draw(ViewProjection* viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+void Player::Update() {
+	// 行列を定数バッファに転送
+	worldTransform_.TransferMatrix();
+}
+void Player::Draw(ViewProjection viewProjection_) {
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 }
