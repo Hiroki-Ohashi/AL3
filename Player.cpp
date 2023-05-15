@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Matrix4x4.h"
 #include <cmath>
+#include "ImGuiManager.h"
 
 // 拡大縮小行列
 Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
@@ -225,6 +226,16 @@ void Player::Update() {
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y -= move.y;
 
+	// 移動限界座標
+	const float kMoveLimitX = 34;
+	const float kMoveLimitY = 18;
+
+	// 範囲超えない処理
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+
 	// スケーリング行列
 	Matrix4x4 scale = MakeScaleMatrix(worldTransform_.scale_);
 
@@ -245,6 +256,14 @@ void Player::Update() {
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
+
+	// キャラクターの座標を画面表示する処理
+	ImGui::Begin("Player pos");
+	// float3入力ボックス
+	ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
+	// float3スライダー
+	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 1.0f);
+	ImGui::End();
 }
 
 void Player::Draw(ViewProjection viewProjection_) {
