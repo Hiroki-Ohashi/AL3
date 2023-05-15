@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -8,6 +9,8 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -19,7 +22,6 @@ public: // メンバ関数
 	/// コンストクラタ
 	/// </summary>
 	GameScene();
-	Sprite* sprite_ = nullptr;
 
 	/// <summary>
 	/// デストラクタ
@@ -45,7 +47,25 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	uint32_t textureHandle_ = 0;
+
+	// デバッグカメラ有効
+	bool isDebugCameraActive_ = false;
+	// デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
+	// テクスチャハンドル
+	uint32_t playerTh_;
+
+	// スプライト
+	Sprite* sprite_ = nullptr;
+
+	// 3Dモデルデータ
+	Model* model_ = nullptr;
+
+	// ビュープロジェクション
+	ViewProjection viewProjection_;
+	// 自キャラ
+	Player* player_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
