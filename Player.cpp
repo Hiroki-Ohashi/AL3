@@ -20,6 +20,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 
 }
+
 // デストラクタ
 Player::~Player() {
 	// bullet_の解放
