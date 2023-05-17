@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include <cassert>
+#include <list>
 #include "Input.h"
 #include "PlayerBullet.h"
 
@@ -11,7 +12,7 @@ public:
 	/// 初期化
 	/// </ summary>
 	void Initialize(Model* model, uint32_t textureHandle);
-
+	~Player();
 	/// <summary>
 	/// 初期化
 	/// </ summary>
@@ -34,5 +35,5 @@ private:
 	// キーボード入力
 	Input* input_ = nullptr;
 	// 弾
-	PlayerBullet* bullet_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 };
