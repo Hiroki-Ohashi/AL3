@@ -51,7 +51,7 @@ void GameScene::Update() {
 	player_->Update();
 
 	// 敵キャラの更新
-	if (enemy_) {
+	if (enemy_ != nullptr) {
 		enemy_->Update();
 	}
 	
@@ -108,7 +108,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	// 敵キャラの描画
-	if (enemy_) {
+	if (enemy_ != nullptr) {
 		enemy_->Draw(viewProjection_);
 	}
 
