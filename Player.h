@@ -4,6 +4,7 @@
 #include "PlayerBullet.h"
 #include "WorldTransform.h"
 #include <cassert>
+#include <list>
 
 class Player {
 public:
@@ -11,7 +12,6 @@ public:
 	/// 初期化
 	/// </ summary>
 	void Initialize(Model* model, uint32_t textureHandle);
-
 	/// <summary>
 	/// 初期化
 	/// </ summary>

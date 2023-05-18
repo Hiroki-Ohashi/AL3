@@ -18,6 +18,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
 	playerTh_ = TextureManager::Load("player.png");
 	sprite_ = Sprite::Create(playerTh_, {100, 50});
 
@@ -96,6 +97,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
+	Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画

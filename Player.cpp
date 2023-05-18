@@ -80,7 +80,9 @@ void Player::Update() {
 	// float3入力ボックス
 	ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
 	// float3スライダー
-	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 34.0f);
+	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 1.0f);
+	// テキスト
+	ImGui::Text("PlayerBullet : Space");
 	ImGui::End();
 }
 
@@ -95,6 +97,7 @@ void Player::Draw(ViewProjection viewProjection_) {
 
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_SPACE)) {
+
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
