@@ -10,7 +10,8 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 
-#include "Player.h"
+#include "player/Player.h"
+#include "enemy/enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,6 +56,7 @@ private: // メンバ変数
 
 	// テクスチャハンドル
 	uint32_t playerTh_;
+	uint32_t enemyTh_;
 
 	// スプライト
 	Sprite* sprite_ = nullptr;
@@ -66,6 +68,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	// 自キャラ
 	Player* player_ = nullptr;
+	// 敵キャラ
+	Enemy* enemy_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

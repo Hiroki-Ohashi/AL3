@@ -58,6 +58,12 @@
     <Filter Include="ソース ファイル\player">
       <UniqueIdentifier>{743a30d9-b644-4777-be10-7afc634b9f24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\enemy">
+      <UniqueIdentifier>{6cd52f63-5267-454d-bfc6-36833aa17c22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enemy">
+      <UniqueIdentifier>{7be1e027-1130-481f-9d4b-4391cdbb1183}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -86,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="PlayerBullet.cpp">
       <Filter>ソース ファイル\player</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy\enemy.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="PlayerBullet.h">
       <Filter>ヘッダー ファイル\player</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy\enemy.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
