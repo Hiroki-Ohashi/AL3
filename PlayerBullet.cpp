@@ -2,7 +2,7 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "Input.h"
-#include "player/PlayerBullet.h"
+#include "PlayerBullet.h"
 #include "TextureManager.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {

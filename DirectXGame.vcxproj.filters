@@ -192,7 +192,7 @@
       <Filter>ヘッダー ファイル\player</Filter>
     </ClInclude>
     <ClInclude Include="enemy\enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
