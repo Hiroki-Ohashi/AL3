@@ -4,7 +4,7 @@
 #include <cassert>
 #include <list>
 #include "Input.h"
-#include "player/PlayerBullet.h"
+#include "PlayerBullet.h"
 
 class Player {
 public:

@@ -6,7 +6,7 @@
 #include "Matrix4x4.h"
 #include <cmath>
 #include "ImGuiManager.h"
-#include "MathFunction.h"
+#include "math/MathFunction.h"
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 

@@ -1,5 +1,5 @@
 #include "WorldTransform.h"
-#include "MathFunction.h"
+#include "math/MathFunction.h"
 #include "Vector3.h"
 #include "Matrix4x4.h"
 #include <cmath>
