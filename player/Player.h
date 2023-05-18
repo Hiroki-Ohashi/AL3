@@ -4,7 +4,12 @@
 #include <cassert>
 #include <list>
 #include "Input.h"
-#include "player/PlayerBullet.h"
+#include "PlayerBullet.h"
+#include "MathFunction.h"
+#include "Matrix4x4.h"
+#include "Vector3.h"
+#include <cmath>
+
 
 class Player {
 public:
@@ -36,4 +41,5 @@ private:
 	Input* input_ = nullptr;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+	Math* math_ = nullptr;
 };

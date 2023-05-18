@@ -6,7 +6,7 @@
 
 class Enemy {
 public : 
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(Model* model, uint32_t textureHandle);
 
 	void Update();
 
@@ -21,5 +21,5 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 速度
-	Vector3 velocity_;
+	Vector3 velocity_ = {0, 0, 1};
 };

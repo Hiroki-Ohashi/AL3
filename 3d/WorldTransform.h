@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include <d3d12.h>
 #include <wrl.h>
+#include "MathFunction.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
@@ -49,4 +50,6 @@ struct WorldTransform {
 	/// 行列を計算・転送する
 	/// </summary>
 	void UpdateMatrix();
+
+	Math* math_ = nullptr;
 };

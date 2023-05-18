@@ -10,7 +10,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 
-#include "player/Player.h"
+#include "Player.h"
 #include "enemy/enemy.h"
 
 /// <summary>

@@ -21,7 +21,8 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	playerTh_ = TextureManager::Load("player.png");
-	sprite_ = Sprite::Create(playerTh_, {100, 50});
+
+	enemyTh_ = TextureManager::Load("white1x1.png");
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
@@ -36,6 +37,8 @@ void GameScene::Initialize() {
 
 	// 敵キャラの生成
 	enemy_ = new Enemy();
+	// 自キャラの初期化
+	enemy_->Initialize(model_, enemyTh_);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1260, 700);

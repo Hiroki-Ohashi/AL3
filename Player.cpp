@@ -1,13 +1,9 @@
-#include "player/Player.h"
+
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
-#include "Vector3.h"
-#include "Matrix4x4.h"
-#include <cmath>
 #include "ImGuiManager.h"
-#include "math/MathFunction.h"
-
+#include <player/Player.h>
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// NULLポインタチェック
@@ -19,6 +15,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
+
+	math_ = new Math;
 
 }
 
@@ -126,7 +124,7 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 速度ベクトルを自機の向きに併せて回転させる
-		velocity = TransfomNormal(velocity, worldTransform_.matWorld_);
+		velocity = math_->TransfomNormal(velocity, worldTransform_.matWorld_);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
