@@ -1,8 +1,8 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
-#include "AxisIndicator.h"
 
 GameScene::GameScene() {}
 
@@ -18,7 +18,6 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
 	playerTh_ = TextureManager::Load("player.png");
 	sprite_ = Sprite::Create(playerTh_, {100, 50});
 
@@ -48,11 +47,11 @@ void GameScene::Update() {
 	// デバッグカメラの更新
 	debugCamera_->Update();
 
-	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_RETURN)) {
 		isDebugCameraActive_ = true;
 	}
-	#endif
+#endif
 
 	// カメラの処理
 	if (isDebugCameraActive_) {
@@ -97,7 +96,6 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
