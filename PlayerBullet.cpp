@@ -2,7 +2,7 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "Input.h"
-#include "PlayerBullet.h"
+#include "player/PlayerBullet.h"
 #include "TextureManager.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
@@ -25,11 +25,17 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 void PlayerBullet::Update(){
 
 	// 座標を移動させる(1フレーム分の移動量を足しこむ)
-	worldTransform_.translation_ += velocity_;
+	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.z += velocity_.z;
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 
+	// 時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {

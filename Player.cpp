@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "player/Player.h"
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
@@ -6,6 +6,7 @@
 #include "Matrix4x4.h"
 #include <cmath>
 #include "ImGuiManager.h"
+#include "MathFunction.h"
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
@@ -30,6 +31,16 @@ Player::~Player() {
 }
 
 void Player::Update() {
+
+	// デスフラグんお立った弾を排除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 
@@ -83,7 +94,7 @@ void Player::Update() {
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
-
+	
 
 	// キャラクターの座標を画面表示する処理
 	ImGui::Begin("Player pos");
@@ -91,6 +102,10 @@ void Player::Update() {
 	ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
 	// float3スライダー
 	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 1.0f);
+	// テキスト
+	ImGui::Text("PlayerBullet : Space");
+	// テキスト
+	ImGui::Text("DebugCamera : Enter");
 	ImGui::End();
 }
 
@@ -106,10 +121,16 @@ void Player::Draw(ViewProjection viewProjection_) {
 
 void Player::Attack() { 
 	if (input_->TriggerKey(DIK_SPACE)) {
+		// 弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		// 速度ベクトルを自機の向きに併せて回転させる
+		velocity = TransfomNormal(velocity, worldTransform_.matWorld_);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		// 弾を登録
 		bullets_.push_back(newBullet);
