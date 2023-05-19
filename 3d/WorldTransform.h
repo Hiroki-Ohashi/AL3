@@ -50,6 +50,4 @@ struct WorldTransform {
 	/// 行列を計算・転送する
 	/// </summary>
 	void UpdateMatrix();
-
-	Math* math_ = nullptr;
 };

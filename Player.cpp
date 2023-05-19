@@ -16,8 +16,6 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
-	math_ = new Math;
-
 }
 
 // デストラクタ
@@ -124,7 +122,7 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 速度ベクトルを自機の向きに併せて回転させる
-		velocity = math_->TransfomNormal(velocity, worldTransform_.matWorld_);
+		velocity = TransfomNormal(velocity, worldTransform_.matWorld_);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();

@@ -6,7 +6,7 @@
 
 
 // ベクトル変換
-Vector3 Math::TransfomNormal(const Vector3& v, const Matrix4x4& m) {
+Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 	    v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
 	    v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
@@ -17,7 +17,7 @@ Vector3 Math::TransfomNormal(const Vector3& v, const Matrix4x4& m) {
 
 
 // 拡大縮小行列
-Matrix4x4 Math::MakeScaleMatrix(const Vector3& scale) {
+Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 MakeScaleMatrix;
 	MakeScaleMatrix.m[0][0] = scale.x;
 	MakeScaleMatrix.m[0][1] = 0.0f;
@@ -42,7 +42,7 @@ Matrix4x4 Math::MakeScaleMatrix(const Vector3& scale) {
 	return MakeScaleMatrix;
 }
 // X軸周りの回転行列
-Matrix4x4 Math::MakeRotateXMatrix(float radian) {
+Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 MakeRotateXMatrix;
 	MakeRotateXMatrix.m[0][0] = 1;
 	MakeRotateXMatrix.m[0][1] = 0;
@@ -67,7 +67,7 @@ Matrix4x4 Math::MakeRotateXMatrix(float radian) {
 	return MakeRotateXMatrix;
 }
 // Y軸周りの回転行列
-Matrix4x4 Math::MakeRotateYMatrix(float radian) {
+Matrix4x4 MakeRotateYMatrix(float radian) {
 	Matrix4x4 MakeRotateYMatrix;
 	MakeRotateYMatrix.m[0][0] = std::cos(radian);
 	MakeRotateYMatrix.m[0][1] = 0;
@@ -92,7 +92,7 @@ Matrix4x4 Math::MakeRotateYMatrix(float radian) {
 	return MakeRotateYMatrix;
 }
 // Z軸周りの回転行列
-Matrix4x4 Math::MakeRotateZMatrix(float radian) {
+Matrix4x4 MakeRotateZMatrix(float radian) {
 	Matrix4x4 MakeRotateZMatrix;
 	MakeRotateZMatrix.m[0][0] = std::cos(radian);
 	MakeRotateZMatrix.m[0][1] = std::sin(radian);
@@ -117,7 +117,7 @@ Matrix4x4 Math::MakeRotateZMatrix(float radian) {
 	return MakeRotateZMatrix;
 }
 // 回転行列
-Matrix4x4 Math::Multiply(Matrix4x4 m1, Matrix4x4 m2) {
+Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2) {
 	Matrix4x4 m4;
 	m4.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] +
 	             m1.m[0][3] * m2.m[3][0];
@@ -157,7 +157,7 @@ Matrix4x4 Math::Multiply(Matrix4x4 m1, Matrix4x4 m2) {
 	return m4;
 }
 // 平行移動行列
-Matrix4x4 Math::MakeTranslateMatrix(const Vector3& translate) {
+Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	Matrix4x4 MakeTranslateMatrix;
 	MakeTranslateMatrix.m[0][0] = 1.0f;
 	MakeTranslateMatrix.m[0][1] = 0.0f;
@@ -182,8 +182,7 @@ Matrix4x4 Math::MakeTranslateMatrix(const Vector3& translate) {
 	return MakeTranslateMatrix;
 }
 //  アフィン変換行列
-Matrix4x4
-    Math::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 MakeAffineMatrix;
 
 	MakeRotateXMatrix(rotate.x);
