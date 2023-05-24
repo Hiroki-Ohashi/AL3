@@ -29,16 +29,25 @@ void Enemy::ApproachUpdate() {
 
 void Enemy::LeaveUpdate() {
 	// 移動 (ベクトルを加算)
-	worldTransform_.translation_.y += velocity_.y;
-	worldTransform_.translation_.x -= velocity_.x;
+	if (phase_ == Phase::Leave) {
+		worldTransform_.translation_.y += velocity_.y;
+		worldTransform_.translation_.x -= velocity_.x;
+	}
 }
+
+// staticで宣言したメンバ関数ポインタテーブルの実態
+void (Enemy::*Enemy::phasePFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
 
 void Enemy::Update() {
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 
-	switch (phase_) { 
+	// メンバ関数ポインタに入っている関数を呼び出す
+	(this->*phasePFuncTable[0])();
+	(this->*phasePFuncTable[1])();
+
+	/*switch (phase_) { 
 	case Phase::Approach:
 	default:
 		ApproachUpdate();
@@ -46,7 +55,7 @@ void Enemy::Update() {
 	case Phase::Leave:
 		LeaveUpdate();
 		break;
-	}
+	}*/
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection_) {
