@@ -5,7 +5,7 @@
 #include "Input.h"
 
 class Enemy {
-public : 
+public:
 	void Initialize(Model* model, uint32_t textureHandle);
 
 	void ApproachUpdate();

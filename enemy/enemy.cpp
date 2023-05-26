@@ -44,8 +44,7 @@ void Enemy::Update() {
 	worldTransform_.UpdateMatrix();
 
 	// メンバ関数ポインタに入っている関数を呼び出す
-	(this->*phasePFuncTable[0])();
-	(this->*phasePFuncTable[1])();
+	(this->*phasePFuncTable[static_cast<size_t>(phase_)])();
 
 	/*switch (phase_) { 
 	case Phase::Approach:
