@@ -3,6 +3,7 @@
 #include "enemy/enemy.h"
 #include "TextureManager.h"
 #include "WorldTransform.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
@@ -16,36 +17,28 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = {0, 5, 100};
+
+	state = new EnemyStateApproach();
 }
 
-void Enemy::ApproachUpdate() {
-	// 移動 (ベクトルを加算)
+void Enemy::Move() { 
+	worldTransform_.translation_.x -= velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z -= velocity_.z;
-	// 既定の位置に達したら離脱
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
-	}
 }
 
-void Enemy::LeaveUpdate() {
-	// 移動 (ベクトルを加算)
-	if (phase_ == Phase::Leave) {
-		worldTransform_.translation_.y += velocity_.y;
-		worldTransform_.translation_.x -= velocity_.x;
-	}
-}
-
-// staticで宣言したメンバ関数ポインタテーブルの実態
-void (Enemy::*Enemy::phasePFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
+//// staticで宣言したメンバ関数ポインタテーブルの実態
+//void (Enemy::*Enemy::phasePFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
 
 void Enemy::Update() {
+	state->Update(this);
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 
-	// メンバ関数ポインタに入っている関数を呼び出す
-	(this->*phasePFuncTable[0])();
-	(this->*phasePFuncTable[1])();
+	//// メンバ関数ポインタに入っている関数を呼び出す
+	//(this->*phasePFuncTable[0])();
+	//(this->*phasePFuncTable[1])();
 
 	/*switch (phase_) { 
 	case Phase::Approach:
@@ -61,4 +54,30 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection_) {
 	// モデル描画
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+}
+
+void Enemy::SetVelocity(float x, float y, float z) { 
+	velocity_.x = x;
+	velocity_.y = y;
+	velocity_.z = z;
+}
+
+void Enemy::ChangeState(BaseEnemyState* newState) { state = newState; }
+
+void EnemyStateApproach::Update(Enemy* pEnemy) {
+	pEnemy->SetVelocity(0, 0, 1);
+	// 移動 (ベクトルを加算)
+	pEnemy->Move();
+	// 既定の位置に達したら離脱
+	if (pEnemy->GetWorldTransform().z < 0.0f) {
+		pEnemy->ChangeState(new EnemyStateLeave());
+	}
+}
+
+void EnemyStateLeave::Update(Enemy* pEnemy) {
+	pEnemy->SetVelocity(0.5, 0.5, 0);
+	
+	// 移動 (ベクトルを加算)
+	pEnemy->Move();
+	
 }
