@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "Input.h"
+#include "enemy/enemyBullet.h"
 
 class Enemy;
 
@@ -24,6 +25,7 @@ public:
 class Enemy {
 public:
 	void Initialize(Model* model, uint32_t textureHandle);
+	~Enemy();
 
 	void Move();
 
@@ -35,6 +37,10 @@ public:
 
 	void SetVelocity(float x, float y, float z);
 
+	void Attack();
+
+	void ApproachInitialize();
+
 	//// 行動フェーズ
 	// enum class Phase {
 	//	Approach, // 接近する
@@ -43,6 +49,7 @@ public:
 
 	Vector3 GetWorldTransform() { return worldTransform_.translation_; }
 	Vector3 GetVelocity() { return velocity_; }
+	static const int kFireInterval = 60;
 
 private:
 	// ワールド変換データ
@@ -53,6 +60,10 @@ private:
 	uint32_t textureHandle_ = 0;
 	// 速度
 	Vector3 velocity_;
+	// 弾
+	std::list<EnemyBullet*> bullets_;
+	// 発射タイマー
+	int32_t attackTimer = 10;
 
 	//// フェーズ
 	// Phase phase_ = Phase::Approach;
