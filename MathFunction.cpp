@@ -215,3 +215,14 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 
 	return MakeAffineMatrix;
 }
+
+// 正規化
+Vector3 Normalize(const Vector3& v) {
+	Vector3 Normalize;
+
+	float mag = 1 / sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+
+	Normalize = {v.x * mag, v.y * mag, v.z * mag};
+
+	return Normalize;
+};

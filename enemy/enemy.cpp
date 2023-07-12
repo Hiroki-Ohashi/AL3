@@ -6,6 +6,7 @@
 #include "WorldTransform.h"
 #include "enemy/enemyBullet.h"
 #include <cassert>
+#include <player/Player.h>
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -19,8 +20,8 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	worldTransform_.translation_ = {0, 5, 100};
 
-	// 弾を発射
-	Attack();
+	//// 弾を発射
+	//Attack();
 
 	// フェーズ初期化
 	ApproachInitialize();
@@ -106,9 +107,29 @@ void Enemy::SetVelocity(float x, float y, float z) {
 }
 
 void Enemy::Attack() {
+
+	assert(player_);
+
 	// 弾の速度
 	const float kBulletSpeed = 1.0f;
-	Vector3 velocity(0, 0, kBulletSpeed);
+	
+
+	Vector3 end = player_->GetWorldPosition();
+	Vector3 start = GetWorldPosition();
+	Vector3 diff;
+
+	diff.x = end.x - start.x;
+	diff.y = end.y - start.y;
+	diff.z = end.z + start.z;
+
+	diff = Normalize(diff);
+
+	diff.x *= kBulletSpeed;
+	diff.y *= kBulletSpeed;
+	diff.z *= kBulletSpeed;
+	
+	Vector3 velocity(diff.x, diff.y, diff.z);
+
 
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();
@@ -119,6 +140,17 @@ void Enemy::Attack() {
 }
 
 void Enemy::ApproachInitialize() { attackTimer = 0; }
+
+Vector3 Enemy::GetWorldPosition() { 
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
 
 void Enemy::ChangeState(BaseEnemyState* newState) { state = newState; }
 
@@ -139,3 +171,5 @@ void EnemyStateLeave::Update(Enemy* pEnemy) {
 	// 移動 (ベクトルを加算)
 	pEnemy->Move();
 }
+
+void  Enemy::SetPlayer(Player* player) { player_ = player; }

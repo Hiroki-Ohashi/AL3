@@ -11,7 +11,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
-	delete enemy_;
+	
 }
 
 void GameScene::Initialize() {
@@ -37,8 +37,10 @@ void GameScene::Initialize() {
 
 	// 敵キャラの生成
 	enemy_ = new Enemy();
-	// 自キャラの初期化
+	// 敵キャラの初期化
 	enemy_->Initialize(model_, enemyTh_);
+	// 敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1260, 700);

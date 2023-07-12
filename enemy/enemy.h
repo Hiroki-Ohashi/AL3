@@ -5,7 +5,10 @@
 #include "Input.h"
 #include "enemy/enemyBullet.h"
 
+// 自機クラスの前方宣言
+
 class Enemy;
+class Player;
 
 class BaseEnemyState {
 public:
@@ -36,10 +39,17 @@ public:
 	void ChangeState(BaseEnemyState* newState);
 
 	void SetVelocity(float x, float y, float z);
+	
+	void SetPlayer(Player* player);
 
 	void Attack();
 
 	void ApproachInitialize();
+
+	
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
 
 	//// 行動フェーズ
 	// enum class Phase {
@@ -64,6 +74,8 @@ private:
 	std::list<EnemyBullet*> bullets_;
 	// 発射タイマー
 	int32_t attackTimer = 10;
+	// 自キャラ
+	Player* player_ = nullptr;
 
 	//// フェーズ
 	// Phase phase_ = Phase::Approach;
