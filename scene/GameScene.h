@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -8,9 +9,8 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
 
-#include "Player.h"
+#include "player/Player.h"
 #include "enemy/enemy.h"
 
 /// <summary>
@@ -44,6 +44,11 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	///	衝突判定と応答
+	/// </summary>
+	void CheckAllCollisions();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -75,5 +80,3 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 };
-
-

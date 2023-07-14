@@ -38,18 +38,22 @@ public:
 
 	void ChangeState(BaseEnemyState* newState);
 
-	void SetVelocity(float x, float y, float z);
-	
-	void SetPlayer(Player* player);
-
 	void Attack();
 
 	void ApproachInitialize();
 
-	
+	void OnCollision();
+
+
+	void SetVelocity(float x, float y, float z);
+
+	void SetPlayer(Player* player);
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+		// 弾リストを取得
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 	//// 行動フェーズ
 	// enum class Phase {

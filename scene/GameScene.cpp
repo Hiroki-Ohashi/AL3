@@ -1,8 +1,8 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
-#include "AxisIndicator.h"
 
 GameScene::GameScene() {}
 
@@ -11,7 +11,6 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
-	
 }
 
 void GameScene::Initialize() {
@@ -33,7 +32,6 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	// 自キャラの初期化
 	player_->Initialize(model_, playerTh_);
-
 
 	// 敵キャラの生成
 	enemy_ = new Enemy();
@@ -59,16 +57,17 @@ void GameScene::Update() {
 	if (enemy_ != nullptr) {
 		enemy_->Update();
 	}
-	
+
+	CheckAllCollisions();
 
 	// デバッグカメラの更新
 	debugCamera_->Update();
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN)) {
 		isDebugCameraActive_ = true;
 	}
-	#endif
+#endif
 
 	// カメラの処理
 	if (isDebugCameraActive_) {
@@ -132,5 +131,99 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
+#pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+	// 判定衝突AとBの座標
+	Vector3 posA, posB;
+
+	// 自弾リストの取得
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	// 敵弾リストの取得
+	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+
+#pragma region 自キャラと敵弾の当たり判定
+	// 自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	// 自キャラと敵弾すべての当たり判定
+	for (EnemyBullet* bullet : enemyBullets) {
+		// 敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		float p2eBX = (posB.x - posA.x) * (posB.x - posA.x);
+		float p2eBY = (posB.y - posA.y) * (posB.y - posA.y);
+		float p2eBZ = (posB.z - posA.z) * (posB.z - posA.z);
+
+		float pRadius = 1;
+		float eBRadius = 1;
+		
+		float L = (pRadius + eBRadius) * (pRadius + eBRadius);
+
+		if (p2eBX + p2eBY + p2eBZ <= L) {
+			// 自キャラの衝突時コールバックを呼び出す
+			player_->OnCollision();
+			// 敵弾の衝突時コールバックを呼び出す
+			bullet->OnCollision();
+		}
+
+	}
+
+#pragma endregion
+
+#pragma region 自弾と敵キャラの当たり判定
+	// 敵キャラの座標
+	posA = enemy_->GetWorldPosition();
+
+	// 敵キャラと自弾すべての当たり判定
+	for (PlayerBullet* bullet : playerBullets) {
+		// 自弾の座標
+		posB = bullet->GetWorldPosition();
+
+		float e2pBX = (posB.x - posA.x) * (posB.x - posA.x);
+		float e2pBY = (posB.y - posA.y) * (posB.y - posA.y);
+		float e2pBZ = (posB.z - posA.z) * (posB.z - posA.z);
+
+		const int eRadius = 1;
+		const int pBRadius = 1;
+
+		float L = (eRadius + pBRadius);
+
+		if (e2pBX + e2pBY + e2pBZ <= L) {
+			// 敵キャラの衝突時コールバックを呼び出す
+			enemy_->OnCollision();
+			// 自弾の衝突時コールバックを呼び出す
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+#pragma region 自弾と敵弾の当たり判定
+	// 敵弾と自弾すべての当たり判定
+	for (PlayerBullet* playerBullet : playerBullets) {
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+			// 敵弾の座標
+			posA = playerBullet->GetWorldPosition();
+			// 自弾の座標
+			posB = enemyBullet->GetWorldPosition();
+
+			float pB2eBX = (posB.x - posA.x) * (posB.x - posA.x);
+			float pB2eBY = (posB.y - posA.y) * (posB.y - posA.y);
+			float pB2eBZ = (posB.z - posA.z) * (posB.z - posA.z);
+
+			float pBRadius = 1;
+			float eBRadius = 1;
+
+			float L = (pBRadius + eBRadius) * (pBRadius + eBRadius);
+
+			if (pB2eBX + pB2eBY + pB2eBZ <= L) {
+				// 自弾の衝突時コールバックを呼び出す
+				playerBullet->OnCollision();
+				// 敵弾の衝突時コールバックを呼び出す
+				enemyBullet->OnCollision();
+			}
+		}
+	}
 #pragma endregion
 }

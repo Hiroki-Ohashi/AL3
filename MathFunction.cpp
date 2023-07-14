@@ -14,8 +14,6 @@ Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m) {
 	return result;
 }
 
-
-
 // 拡大縮小行列
 Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 MakeScaleMatrix;
@@ -183,39 +181,70 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 }
 //  アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
-	Matrix4x4 MakeAffineMatrix;
+	Matrix4x4 m4;
+	Matrix4x4 m1;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			m1.m[i][j] = 0;
+		}
+	}
+	m1.m[0][0] = 1;
+	m1.m[1][1] = std::cos(rotate.x);
+	m1.m[1][2] = std::sin(rotate.x);
+	m1.m[2][1] = -std::sin(rotate.x);
+	m1.m[2][2] = std::cos(rotate.x);
+	m1.m[3][3] = 1;
 
-	MakeRotateXMatrix(rotate.x);
-	MakeRotateYMatrix(rotate.y);
-	MakeRotateZMatrix(rotate.z);
+	Matrix4x4 m2;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			m2.m[i][j] = 0;
+		}
+	}
+	m2.m[0][0] = std::cos(rotate.y);
+	m2.m[1][1] = 1;
+	m2.m[2][2] = std::cos(rotate.y);
+	m2.m[0][2] = -std::sin(rotate.y);
+	m2.m[2][0] = std::sin(rotate.y);
+	m2.m[3][3] = 1;
 
-	Matrix4x4 XYZ = Multiply(
-	    MakeRotateXMatrix(rotate.x),
-	    Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
+	Matrix4x4 m3;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			m3.m[i][j] = 0;
+		}
+	}
+	m3.m[0][0] = std::cos(rotate.z);
+	m3.m[2][2] = 1;
+	m3.m[1][1] = std::cos(rotate.z);
+	m3.m[1][0] = -std::sin(rotate.z);
+	m3.m[0][1] = std::sin(rotate.z);
+	m3.m[3][3] = 1;
 
-	MakeAffineMatrix.m[0][0] = XYZ.m[0][0] * scale.x;
-	MakeAffineMatrix.m[0][1] = XYZ.m[0][1] * scale.x;
-	MakeAffineMatrix.m[0][2] = XYZ.m[0][2] * scale.x;
-	MakeAffineMatrix.m[0][3] = 0;
+	Matrix4x4 xyz = Multiply(m1, Multiply(m2, m3));
 
-	MakeAffineMatrix.m[1][0] = XYZ.m[1][0] * scale.y;
-	MakeAffineMatrix.m[1][1] = XYZ.m[1][1] * scale.y;
-	MakeAffineMatrix.m[1][2] = XYZ.m[1][2] * scale.y;
-	MakeAffineMatrix.m[1][3] = 0;
+	m4.m[0][0] = xyz.m[0][0] * scale.x;
+	m4.m[0][1] = xyz.m[0][1] * scale.x;
+	m4.m[0][2] = xyz.m[0][2] * scale.x;
 
-	MakeAffineMatrix.m[2][0] = XYZ.m[2][0] * scale.z;
-	MakeAffineMatrix.m[2][1] = XYZ.m[2][1] * scale.z;
-	MakeAffineMatrix.m[2][2] = XYZ.m[2][2] * scale.z;
-	MakeAffineMatrix.m[2][3] = 0;
+	m4.m[1][0] = xyz.m[1][0] * scale.y;
+	m4.m[1][1] = xyz.m[1][1] * scale.y;
+	m4.m[1][2] = xyz.m[1][2] * scale.y;
 
-	MakeAffineMatrix.m[3][0] = translate.x;
-	MakeAffineMatrix.m[3][1] = translate.y;
-	MakeAffineMatrix.m[3][2] = translate.z;
-	MakeAffineMatrix.m[3][3] = 1;
+	m4.m[2][0] = xyz.m[2][0] * scale.z;
+	m4.m[2][1] = xyz.m[2][1] * scale.z;
+	m4.m[2][2] = xyz.m[2][2] * scale.z;
 
-	return MakeAffineMatrix;
-}
+	m4.m[3][0] = translate.x;
+	m4.m[3][1] = translate.y;
+	m4.m[3][2] = translate.z;
+	m4.m[0][3] = 0;
+	m4.m[1][3] = 0;
+	m4.m[2][3] = 0;
+	m4.m[3][3] = 1.0f;
 
+	return m4;
+};
 // 正規化
 Vector3 Normalize(const Vector3& v) {
 	Vector3 Normalize;

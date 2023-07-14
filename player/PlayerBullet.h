@@ -12,7 +12,12 @@ public:
 
 	void Draw(const ViewProjection& viewProjection);
 
+	void OnCollision();
+
 	bool IsDead() const {return isDead_;}
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
 
 private:
 	// ワールド変換データ

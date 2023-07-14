@@ -38,7 +38,7 @@ Enemy::~Enemy() {
 
 void Enemy::Move() {
 	worldTransform_.translation_.x -= velocity_.x;
-	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.y -= velocity_.y;
 	worldTransform_.translation_.z -= velocity_.z;
 }
 
@@ -113,14 +113,13 @@ void Enemy::Attack() {
 	// 弾の速度
 	const float kBulletSpeed = 1.0f;
 	
-
-	Vector3 end = player_->GetWorldPosition();
 	Vector3 start = GetWorldPosition();
+	Vector3 end = player_->GetWorldPosition();
 	Vector3 diff;
 
 	diff.x = end.x - start.x;
 	diff.y = end.y - start.y;
-	diff.z = end.z + start.z;
+	diff.z = end.z - start.z;
 
 	diff = Normalize(diff);
 
@@ -141,6 +140,8 @@ void Enemy::Attack() {
 
 void Enemy::ApproachInitialize() { attackTimer = 0; }
 
+void Enemy::OnCollision() {}
+
 Vector3 Enemy::GetWorldPosition() { 
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
@@ -155,7 +156,7 @@ Vector3 Enemy::GetWorldPosition() {
 void Enemy::ChangeState(BaseEnemyState* newState) { state = newState; }
 
 void EnemyStateApproach::Update(Enemy* pEnemy) {
-	pEnemy->SetVelocity(0, 0, 0.5);
+	pEnemy->SetVelocity(0, 0, 0.1f);
 	// 移動 (ベクトルを加算)
 	
 	pEnemy->Move();
@@ -167,7 +168,7 @@ void EnemyStateApproach::Update(Enemy* pEnemy) {
 }
 
 void EnemyStateLeave::Update(Enemy* pEnemy) {
-	pEnemy->SetVelocity(0.5, 0.5, 0);
+	pEnemy->SetVelocity(0.1f, -0.1f, 0);
 	// 移動 (ベクトルを加算)
 	pEnemy->Move();
 }

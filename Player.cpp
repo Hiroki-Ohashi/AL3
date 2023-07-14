@@ -97,7 +97,7 @@ void Player::Update() {
 	// float3入力ボックス
 	ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
 	// float3スライダー
-	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 1.0f);
+	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -18.0f, 34.0f);
 	// テキスト
 	ImGui::Text("PlayerBullet : Space");
 	// テキスト
@@ -132,6 +132,8 @@ void Player::Attack() {
 		bullets_.push_back(newBullet);
 	}
 }
+
+void Player::OnCollision() {}
 
 Vector3 Player::GetWorldPosition() { 
 	// ワールド座標を入れる変数
