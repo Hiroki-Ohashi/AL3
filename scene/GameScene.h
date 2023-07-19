@@ -12,6 +12,7 @@
 
 #include "player/Player.h"
 #include "enemy/enemy.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -75,6 +76,11 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	// 敵キャラ
 	Enemy* enemy_ = nullptr;
+
+	// 天球
+	Skydome* skyDome_ = nullptr;
+	// 3Dモデル
+	Model* modelSkydome_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
