@@ -16,7 +16,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </ summary>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
 	~Player();
 	/// <summary>
 	/// 初期化
@@ -31,6 +31,8 @@ public:
 	void Attack();
 
 	void OnCollision();
+
+	void SetParent(const WorldTransform* parent);
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();

@@ -22,3 +22,5 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 // 正規化
 Vector3 Normalize(const Vector3& v);
+// 逆行列
+Matrix4x4 Inverse(const Matrix4x4& m);

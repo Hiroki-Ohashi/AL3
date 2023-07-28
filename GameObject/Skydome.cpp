@@ -9,7 +9,7 @@ void Skydome::Initialize(Model* model) {
 
 	worldTransform_.Initialize(); 
 	worldTransform_.translation_ = {0, 0, 0};
-	worldTransform_.scale_ = {100, 100, 100};
+	worldTransform_.scale_ = {1000, 1000, 1000};
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();

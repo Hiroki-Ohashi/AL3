@@ -13,10 +13,13 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete skyDome_;
 	delete modelSkydome_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
-
+	// ビュープロジェクションの初期化
+	viewProjection_.farZ = 10000.0f;
+	viewProjection_.Initialize();
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -30,10 +33,20 @@ void GameScene::Initialize() {
 
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
+	// レールカメラの生成
+	railCamera_ = new RailCamera();
+	// レールカメラの初期化
+	railCamera_->Initialize({0, 0, 0}, {0, 0, 0});
+
 	// 自キャラの生成
 	player_ = new Player();
+	Vector3 playerPosition(0, 0, 30);
 	// 自キャラの初期化
-	player_->Initialize(model_, playerTh_);
+	player_->Initialize(model_, playerTh_, playerPosition);
+	// 自キャラとレールカメラの親子関係を結ぶ
+	player_->SetParent(&railCamera_->GetWorldTransform());
+	
 
 	// 敵キャラの生成
 	enemy_ = new Enemy();
@@ -50,10 +63,6 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skyDome_->Initialize(modelSkydome_);
 
-	// ビュープロジェクションの初期化
-	viewProjection_.farZ = 10000.0f;
-	viewProjection_.Initialize();
-
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1260, 700);
 
@@ -64,6 +73,9 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+	// 天球の更新
+	skyDome_->Update();
+
 	// 自キャラの更新
 	player_->Update();
 
@@ -74,11 +86,7 @@ void GameScene::Update() {
 
 	CheckAllCollisions();
 
-	// 天球の更新
-	skyDome_->Update();
-
-	// デバッグカメラの更新
-	debugCamera_->Update();
+	
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN)) {
@@ -88,13 +96,26 @@ void GameScene::Update() {
 
 	// カメラの処理
 	if (isDebugCameraActive_) {
+
+		// デバッグカメラの更新
+		debugCamera_->Update();
+
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
 		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
+		//viewProjection_.UpdateMatrix();
+
+		// レールカメラの更新
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+
+		viewProjection_.TransferMatrix();
+
 	}
 }
 
@@ -178,7 +199,7 @@ void GameScene::CheckAllCollisions() {
 
 		float pRadius = 1;
 		float eBRadius = 1;
-		
+
 		float L = (pRadius + eBRadius) * (pRadius + eBRadius);
 
 		if (p2eBX + p2eBY + p2eBZ <= L) {
@@ -187,7 +208,6 @@ void GameScene::CheckAllCollisions() {
 			// 敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
 		}
-
 	}
 
 #pragma endregion

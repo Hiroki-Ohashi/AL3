@@ -4,7 +4,7 @@
 #include <cassert>
 #include "ImGuiManager.h"
 #include <player/Player.h>
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 
 	// NULLポインタチェック
 	assert(model);
@@ -12,6 +12,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	model_ = model;
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
+	worldTransform_.UpdateMatrix();
 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
@@ -126,7 +128,7 @@ void Player::Attack() {
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
 
 		// 弾を登録
 		bullets_.push_back(newBullet);
@@ -134,6 +136,11 @@ void Player::Attack() {
 }
 
 void Player::OnCollision() {}
+
+void Player::SetParent(const WorldTransform* parent) {
+	// 親子関係を結ぶ
+	worldTransform_.parent_ = parent;
+}
 
 Vector3 Player::GetWorldPosition() { 
 	// ワールド座標を入れる変数
