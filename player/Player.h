@@ -51,4 +51,6 @@ private:
 	Input* input_ = nullptr;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+	// 3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_;
 };

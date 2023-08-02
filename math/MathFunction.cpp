@@ -14,6 +14,14 @@ Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m) {
 	return result;
 }
 
+Vector3 Add(const Vector3& v1, const Vector3& v2) { 
+	Vector3 result;
+	result.x = v1.x + v2.x;
+	result.y = v1.y + v2.y;
+	result.z = v1.z + v2.z;
+	return result;
+}
+
 // 拡大縮小行列
 Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 MakeScaleMatrix;

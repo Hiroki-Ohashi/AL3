@@ -6,6 +6,9 @@
 // ベクトル変換
 Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m);
 
+// ベクトル足し算
+Vector3 Add(const Vector3& v1, const Vector3& v2);
+
 // 拡大縮小行列
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 // X軸周りの回転行列

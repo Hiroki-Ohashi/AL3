@@ -1,8 +1,8 @@
 
+#include "ImGuiManager.h"
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
-#include "ImGuiManager.h"
 #include <player/Player.h>
 void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) {
 
@@ -18,6 +18,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 position) 
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
+	// 3Dレティクルのワールドトランスフォーム初期化
+	worldTransform3DReticle_.Initialize();
 }
 
 // デストラクタ
@@ -92,7 +94,22 @@ void Player::Update() {
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
-	
+
+	// 自機のワールド座標から3Dレティクルのワールド座標を計算
+
+	// 自機から3Dレティクルへの距離
+	const float kDistancePlayerTo3DReticle = 50.0f;
+	// 自機から3Dレティクルへのオフセット(Z+向き)
+	Vector3 offset = {0, 0, 1.0f};
+	// 自機のワールド行列の回転を反映
+	offset = TransfomNormal(offset, worldTransform_.matWorld_);
+	// ベクトルの長さを変える
+	offset.x = Normalize(offset).x * kDistancePlayerTo3DReticle;
+	offset.y = Normalize(offset).y * kDistancePlayerTo3DReticle;
+	offset.z = Normalize(offset).z * kDistancePlayerTo3DReticle;
+	// 3Dレティクルの座標を設定
+	worldTransform3DReticle_.translation_ = Add(offset, GetWorldPosition());
+	worldTransform3DReticle_.UpdateMatrix();
 
 	// キャラクターの座標を画面表示する処理
 	ImGui::Begin("Player pos");
@@ -115,9 +132,12 @@ void Player::Draw(ViewProjection viewProjection_) {
 		bullet->Draw(viewProjection_);
 	}
 
+	// 3Dレティクルを描画
+	model_->Draw(worldTransform3DReticle_, viewProjection_);
 }
 
-void Player::Attack() { 
+void Player::Attack() {
+
 	if (input_->TriggerKey(DIK_SPACE)) {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
@@ -142,7 +162,7 @@ void Player::SetParent(const WorldTransform* parent) {
 	worldTransform_.parent_ = parent;
 }
 
-Vector3 Player::GetWorldPosition() { 
+Vector3 Player::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得
