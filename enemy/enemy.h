@@ -9,6 +9,7 @@
 
 class Enemy;
 class Player;
+class GameScene;
 
 class BaseEnemyState {
 public:
@@ -27,7 +28,7 @@ public:
 
 class Enemy {
 public:
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 translation);
 	~Enemy();
 
 	void Move();
@@ -49,11 +50,11 @@ public:
 
 	void SetPlayer(Player* player);
 
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 
-		// 弾リストを取得
-	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 	//// 行動フェーズ
 	// enum class Phase {
@@ -66,7 +67,7 @@ public:
 	static const int kFireInterval = 60;
 
 private:
-	// ワールド変換データ
+	// ワールド変換データ0
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
@@ -74,12 +75,12 @@ private:
 	uint32_t textureHandle_ = 0;
 	// 速度
 	Vector3 velocity_;
-	// 弾
-	std::list<EnemyBullet*> bullets_;
 	// 発射タイマー
 	int32_t attackTimer = 10;
 	// 自キャラ
 	Player* player_ = nullptr;
+	// ゲームシーン
+	GameScene* gameScene_ = nullptr;
 
 	//// フェーズ
 	// Phase phase_ = Phase::Approach;

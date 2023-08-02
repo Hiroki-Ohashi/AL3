@@ -7,8 +7,9 @@
 #include "enemy/enemyBullet.h"
 #include <cassert>
 #include <player/Player.h>
+#include "GameScene.h"
 
-void Enemy::Initialize(Model* model, uint32_t textureHandle) {
+void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 translation) {
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
@@ -18,7 +19,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {0, 5, 100};
+	worldTransform_.translation_ = translation;
 
 	//// 弾を発射
 	//Attack();
@@ -30,10 +31,6 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 }
 
 Enemy::~Enemy() {
-	// bullet_の解放
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
 }
 
 void Enemy::Move() {
@@ -48,15 +45,6 @@ void Enemy::Move() {
 void Enemy::Update() {
 	state->Update(this);
 
-	// デスフラグんお立った弾を排除
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 
@@ -69,11 +57,6 @@ void Enemy::Update() {
 
 		// 発射タイマーを初期化
 		attackTimer = kFireInterval;
-	}
-
-	// 弾更新
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
 	}
 
 	//// メンバ関数ポインタに入っている関数を呼び出す
@@ -94,10 +77,6 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection_) {
 	// モデル描画
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-	// 弾描画
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection_);
-	}
 }
 
 void Enemy::SetVelocity(float x, float y, float z) {
@@ -129,13 +108,12 @@ void Enemy::Attack() {
 	
 	Vector3 velocity(diff.x, diff.y, diff.z);
 
-
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 	// 弾を登録
-	bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 void Enemy::ApproachInitialize() { attackTimer = 0; }
