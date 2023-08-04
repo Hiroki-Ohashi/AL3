@@ -9,6 +9,7 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include <cmath>
+#include <Sprite.h>
 
 
 class Player {
@@ -28,6 +29,8 @@ public:
 	/// </ summary>
 	void Draw(ViewProjection);
 
+	void DrawUI();
+
 	void Attack();
 
 	void OnCollision();
@@ -36,6 +39,8 @@ public:
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	Vector3 Get3DWorldPosition();
 
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
@@ -53,4 +58,9 @@ private:
 	std::list<PlayerBullet*> bullets_;
 	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticle_;
+
+	// 2Dレティクル用スプライト
+	Sprite* sprite2DReicle_ = nullptr;
+
+	ViewProjection viewProjection;
 };

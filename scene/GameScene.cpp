@@ -28,9 +28,9 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
+
 	// ビュープロジェクションの初期化
-	viewProjection_.farZ = 10000.0f;
-	viewProjection_.Initialize();
+
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -49,6 +49,9 @@ void GameScene::Initialize() {
 	railCamera_ = new RailCamera();
 	// レールカメラの初期化
 	railCamera_->Initialize({0, 0, 0}, {0, 0, 0});
+
+	// レティクルのテクスチャ
+	TextureManager::Load("Reticle.png");
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -193,6 +196,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

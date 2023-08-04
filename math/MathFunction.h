@@ -4,7 +4,7 @@
 #include "Vector3.h"
 
 // ベクトル変換
-Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m);
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 // ベクトル足し算
 Vector3 Add(const Vector3& v1, const Vector3& v2);
@@ -27,3 +27,8 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 Vector3 Normalize(const Vector3& v);
 // 逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
+
+// ビューポート変換行列
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+
+Vector3 Transform(const Vector3& vecter, const Matrix4x4& matrix);

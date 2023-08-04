@@ -2,11 +2,12 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include <cmath>
+#include <cassert>
 
 
 
 // ベクトル変換
-Vector3 TransfomNormal(const Vector3& v, const Matrix4x4& m) {
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 	    v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
 	    v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
@@ -362,4 +363,47 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 	              m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][2] * m.m[2][1]);
 
 	return m4;
+}
+Matrix4x4 MakeViewportMatrix(
+    float left, float top, float width, float height, float minDepth, float maxDepth) {
+	Matrix4x4 mvm;
+	mvm.m[0][0] = width / 2;
+	mvm.m[0][1] = 0;
+	mvm.m[0][2] = 0;
+	mvm.m[0][3] = 0;
+
+	mvm.m[1][0] = 0;
+	mvm.m[1][1] = -height / 2;
+	mvm.m[1][2] = 0;
+	mvm.m[1][3] = 0;
+
+	mvm.m[2][0] = 0;
+	mvm.m[2][1] = 0;
+	mvm.m[2][2] = maxDepth - minDepth;
+	mvm.m[2][3] = 0;
+
+	mvm.m[3][0] = left + (width / 2);
+	mvm.m[3][1] = top + (height / 2);
+	mvm.m[3][2] = minDepth;
+	mvm.m[3][3] = 1;
+	return mvm;
 };
+
+Vector3 Transform(const Vector3& vecter, const Matrix4x4& matrix) {
+	Vector3 Transform;
+	Transform.x = vecter.x * matrix.m[0][0] + vecter.y * matrix.m[1][0] +
+	              vecter.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
+	Transform.y = vecter.x * matrix.m[0][1] + vecter.y * matrix.m[1][1] +
+	              vecter.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
+	Transform.z = vecter.x * matrix.m[0][2] + vecter.z * matrix.m[1][2] +
+	              vecter.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
+	float w = vecter.x * matrix.m[0][3] + vecter.y * matrix.m[1][3] + vecter.z * matrix.m[2][3] +
+	          1.0f * matrix.m[3][3];
+
+	assert(w != 0.0f);
+
+	Transform.x /= w;
+	Transform.y /= w;
+	Transform.z /= w;
+	return Transform;
+}
