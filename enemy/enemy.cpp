@@ -5,7 +5,8 @@
 #include "WorldTransform.h"
 #include "ImGuiManager.h"
 #include <cassert>
-#include <EnemyState.h>
+#include "enemy/BaseEnemyState.h"
+#include "EnemyStateApproch.h"
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック

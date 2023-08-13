@@ -3,7 +3,7 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "Input.h"
-#include <EnemyState.h>
+#include "enemy/BaseEnemyState.h"
 
 class Enemy;
 
