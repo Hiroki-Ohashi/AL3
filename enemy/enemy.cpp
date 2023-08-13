@@ -5,6 +5,7 @@
 #include "WorldTransform.h"
 #include "ImGuiManager.h"
 #include <cassert>
+#include <EnemyState.h>
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -63,21 +64,3 @@ void Enemy::SetVelocity(float x, float y, float z) {
 }
 
 void Enemy::ChangeState(BaseEnemyState* newState) { state = newState; }
-
-void EnemyStateApproach::Update(Enemy* pEnemy) {
-	pEnemy->SetVelocity(0, 0, 1);
-	// 移動 (ベクトルを加算)
-	pEnemy->Move();
-	// 既定の位置に達したら離脱
-	if (pEnemy->GetWorldTransform().z < 0.0f) {
-		pEnemy->ChangeState(new EnemyStateLeave());
-	}
-}
-
-void EnemyStateLeave::Update(Enemy* pEnemy) {
-	pEnemy->SetVelocity(0.5, 0.5, 0);
-	
-	// 移動 (ベクトルを加算)
-	pEnemy->Move();
-	
-}
