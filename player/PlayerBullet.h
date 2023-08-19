@@ -3,8 +3,9 @@
 #include "WorldTransform.h"
 #include <cassert>
 #include "Input.h"
+#include "Collider.h"
 
-class PlayerBullet {
+class PlayerBullet : public Collider {
 public:
 	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
 
@@ -12,12 +13,12 @@ public:
 
 	void Draw(const ViewProjection& viewProjection);
 
-	void OnCollision();
+	void OnCollision() override;
 
 	bool IsDead() const {return isDead_;}
 
 	// ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 private:
 	// ワールド変換データ

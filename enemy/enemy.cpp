@@ -142,7 +142,7 @@ void Enemy::ApproachInitialize() { attackTimer = 0; }
 
 void Enemy::OnCollision() {}
 
-Vector3 Enemy::GetWorldPosition() { 
+Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得

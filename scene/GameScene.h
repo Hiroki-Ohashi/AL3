@@ -12,6 +12,7 @@
 
 #include "player/Player.h"
 #include "enemy/enemy.h"
+#include"Collider.h"
 
 /// <summary>
 /// ゲームシーン
@@ -75,6 +76,8 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	// 敵キャラ
 	Enemy* enemy_ = nullptr;
+
+	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
 	/// <summary>
 	/// ゲームシーン用

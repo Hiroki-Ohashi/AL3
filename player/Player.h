@@ -6,12 +6,13 @@
 #include "Input.h"
 #include "PlayerBullet.h"
 #include "MathFunction.h"
+#include "Collider.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include <cmath>
 
 
-class Player {
+class Player : public Collider{
 public:
 	/// <summary>
 	/// 初期化
@@ -30,10 +31,10 @@ public:
 
 	void Attack();
 
-	void OnCollision();
+	void OnCollision() override;
 
 	// ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }

@@ -4,13 +4,14 @@
 #include <cassert>
 #include "Input.h"
 #include "enemy/enemyBullet.h"
+#include "Collider.h"
 
 // 自機クラスの前方宣言
 
 class Enemy;
 class Player;
 
-class BaseEnemyState {
+class BaseEnemyState{
 public:
 	virtual void Update(Enemy* pEnemy) = 0;
 };
@@ -25,7 +26,7 @@ public:
 	void Update(Enemy* pEnemy);
 };
 
-class Enemy {
+class Enemy : public Collider {
 public:
 	void Initialize(Model* model, uint32_t textureHandle);
 	~Enemy();
@@ -42,7 +43,7 @@ public:
 
 	void ApproachInitialize();
 
-	void OnCollision();
+	void OnCollision() override;
 
 
 	void SetVelocity(float x, float y, float z);
@@ -50,9 +51,9 @@ public:
 	void SetPlayer(Player* player);
 
 	// ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
-		// 弾リストを取得
+	// 弾リストを取得
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 	//// 行動フェーズ
