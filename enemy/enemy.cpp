@@ -7,6 +7,7 @@
 #include "enemy/enemyBullet.h"
 #include <cassert>
 #include <player/Player.h>
+#include"CollisionConfig.h"
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -27,6 +28,11 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	ApproachInitialize();
 
 	state = new EnemyStateApproach();
+
+	// 衝突属性を設定
+	SetCollisionAttribute(1);
+	// 衝突対象を自分の属性以外に設定
+	SetCollisionMask(0);
 }
 
 Enemy::~Enemy() {

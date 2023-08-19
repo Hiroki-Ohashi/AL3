@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "WorldTransform.h"
 #include <cassert>
+#include"CollisionConfig.h"
 
 GameScene::GameScene() {}
 
@@ -74,10 +75,11 @@ void GameScene::Update() {
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
-	} else {
-		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
+viewProjection_.TransferMatrix();
+	}
+ else {
+	 // ビュープロジェクション行列の更新と転送
+	 viewProjection_.UpdateMatrix();
 	}
 }
 
@@ -135,42 +137,39 @@ void GameScene::Draw() {
 }
 
 void GameScene::CheckAllCollisions() {
-
 	// 自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	// 敵弾リストの取得
 	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+	// コライダー
+	std::list<Collider*> colliders_;
 
-#pragma region 自キャラと敵弾の当たり判定
-
-	// 自キャラと敵弾の当たり判定
-	for (EnemyBullet* bullet : enemyBullets) {
-		// ペアの衝突判定
-		CheckCollisionPair(player_, bullet);
-	}
-
-#pragma endregion
-
-#pragma region 自弾と敵キャラの当たり判定
-
-	// 自弾と敵キャラの当たり判定
+	// コライダーをリストに登録
+	colliders_.push_back(player_);
+	colliders_.push_back(enemy_);
+	//自弾全てについて
 	for (PlayerBullet* bullet : playerBullets) {
-		// ペアの衝突判定
-		CheckCollisionPair(enemy_, bullet);
+		colliders_.push_back(bullet);
+	}
+	// 敵弾全てについて
+	for (EnemyBullet* bullet : enemyBullets) {
+		colliders_.push_back(bullet);
 	}
 
-#pragma endregion
+	// リスト内のペアを総当たり
+	std::list<Collider*>::iterator itrA = colliders_.begin();
+	for (; itrA != colliders_.end(); ++itrA) {
 
-#pragma region 自弾と敵弾の当たり判定
+		// イテレータBはイテレータ―Aの次の要素から回す（重複判定を回避）
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
+		for (; itrB != colliders_.end(); ++itrB) {
 
-	// 自弾と敵弾の当たり判定
-	for (PlayerBullet* playerbullet : playerBullets) {
-		for (EnemyBullet* enemybullet : enemyBullets) {
-			// ペアの衝突判定
-			CheckCollisionPair(playerbullet, enemybullet);
+			// ペアの当たり判定
+			CheckCollisionPair(*itrA, *itrB);
 		}
 	}
-#pragma endregion
+
 }
 
 void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
@@ -193,6 +192,11 @@ void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	float r2r = (radiusA + radiusB) * (radiusA + radiusB);
 
 	if (p2b <= r2r) {
+		// 衝突フィルタリング
+		if (colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask() ||
+		    colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask()) {
+			return;
+		};
 		// コライダーAの衝突時コールバックを呼び出す
 		colliderA->OnCollision();
 		// コライダーBの衝突時コールバックを呼び出す
