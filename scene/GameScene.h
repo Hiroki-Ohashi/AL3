@@ -12,7 +12,8 @@
 
 #include "player/Player.h"
 #include "enemy/enemy.h"
-#include"Collider.h"
+#include "Collider.h"
+#include "CollisionManeger.h"
 
 /// <summary>
 /// ゲームシーン
@@ -48,7 +49,6 @@ public: // メンバ関数
 	/// <summary>
 	///	衝突判定と応答
 	/// </summary>
-	void CheckAllCollisions();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -76,8 +76,8 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	// 敵キャラ
 	Enemy* enemy_ = nullptr;
-
-	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+	// 衝突判定
+	CollisionManeger* collisionManeger_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

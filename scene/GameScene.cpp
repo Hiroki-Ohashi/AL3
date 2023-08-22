@@ -12,6 +12,8 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
+	delete enemy_;
+	delete collisionManeger_;
 }
 
 void GameScene::Initialize() {
@@ -23,6 +25,10 @@ void GameScene::Initialize() {
 	playerTh_ = TextureManager::Load("player.png");
 
 	enemyTh_ = TextureManager::Load("white1x1.png");
+
+	// 衝突判定
+	collisionManeger_ = new CollisionManeger;
+	collisionManeger_->SetGameScene(this);
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
@@ -40,6 +46,10 @@ void GameScene::Initialize() {
 	enemy_->Initialize(model_, enemyTh_);
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
+
+	collisionManeger_->SetPlayer(player_);
+	collisionManeger_->SetEnemy(enemy_);
+
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1260, 700);
@@ -59,7 +69,8 @@ void GameScene::Update() {
 		enemy_->Update();
 	}
 
-	CheckAllCollisions();
+	// 衝突判定
+	collisionManeger_->CheckAllCollision();
 
 	// デバッグカメラの更新
 	debugCamera_->Update();
@@ -134,72 +145,4 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
-}
-
-void GameScene::CheckAllCollisions() {
-	// 自弾リストの取得
-	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	// 敵弾リストの取得
-	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
-	// コライダー
-	std::list<Collider*> colliders_;
-
-	// コライダーをリストに登録
-	colliders_.push_back(player_);
-	colliders_.push_back(enemy_);
-	//自弾全てについて
-	for (PlayerBullet* bullet : playerBullets) {
-		colliders_.push_back(bullet);
-	}
-	// 敵弾全てについて
-	for (EnemyBullet* bullet : enemyBullets) {
-		colliders_.push_back(bullet);
-	}
-
-	// リスト内のペアを総当たり
-	std::list<Collider*>::iterator itrA = colliders_.begin();
-	for (; itrA != colliders_.end(); ++itrA) {
-
-		// イテレータBはイテレータ―Aの次の要素から回す（重複判定を回避）
-		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-		for (; itrB != colliders_.end(); ++itrB) {
-
-			// ペアの当たり判定
-			CheckCollisionPair(*itrA, *itrB);
-		}
-	}
-
-}
-
-void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
-	// 判定対象AとBの座標と半径
-	Vector3 posA, posB;
-	float radiusA, radiusB;
-
-	// colliderAの座標と半径
-	posA = colliderA->GetWorldPosition();
-	radiusA = colliderA->GetRadius();
-
-	// colliderBの座標と半径
-	posB = colliderB->GetWorldPosition();
-	radiusB = colliderB->GetRadius();
-
-	// 弾と弾の交差判定
-	float p2b = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
-	            (posB.z - posA.z) * (posB.z - posA.z);
-
-	float r2r = (radiusA + radiusB) * (radiusA + radiusB);
-
-	if (p2b <= r2r) {
-		// 衝突フィルタリング
-		if (colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask() ||
-		    colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask()) {
-			return;
-		};
-		// コライダーAの衝突時コールバックを呼び出す
-		colliderA->OnCollision();
-		// コライダーBの衝突時コールバックを呼び出す
-		colliderB->OnCollision();
-	}
 }
