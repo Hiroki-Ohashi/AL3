@@ -4,6 +4,7 @@
 #include <cassert>
 #include "ImGuiManager.h"
 #include <player/Player.h>
+
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 	// NULLポインタチェック

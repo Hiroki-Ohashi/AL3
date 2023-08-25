@@ -3,6 +3,9 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include <cassert>
+#include <Vector3.h>
+
+class Player;
 
 class EnemyBullet {
 public:
@@ -16,12 +19,16 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
+	// ビュープロジェクション
+	ViewProjection viewProjection_;
 	// モデル
 	Model* model_ = nullptr;
 	// テクスチャハンドル
@@ -34,4 +41,6 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+	// 自機
+	Player* player_ = nullptr;
 };
