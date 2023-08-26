@@ -19,10 +19,10 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
-	void SetPlayer(Player* player) { player_ = player; }
-
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	void SetPlayer(Player* player);
 
 private:
 	// ワールド変換データ

@@ -1,12 +1,8 @@
 #include "Input.h"
-#include "Model.h"
 #include "TextureManager.h"
-#include "WorldTransform.h"
+#include "player/Player.h"
 #include "enemy/enemyBullet.h"
 #include "MathFunction.h"
-#include <cassert>
-#include <cmath>
-#include <player/Player.h>
 
 void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 
@@ -44,11 +40,13 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 
 void EnemyBullet::Update() {
 
+	assert(player_);
+
 	// 敵弾から自キャラへのベクトル計算
 	Vector3 toPlayer;
-	toPlayer.x = player_->GetWorldPosition().x - worldTransform_.matWorld_.m[3][0];
-	toPlayer.y = player_->GetWorldPosition().y - worldTransform_.matWorld_.m[3][1];
-	toPlayer.z = player_->GetWorldPosition().z - worldTransform_.matWorld_.m[3][2];
+	toPlayer.x = player_->GetWorldPosition().x - GetWorldPosition().x;
+	toPlayer.y = player_->GetWorldPosition().y - GetWorldPosition().y;
+	toPlayer.z = player_->GetWorldPosition().z - GetWorldPosition().z;
 
 	float t = 0.01f;
 
@@ -99,3 +97,5 @@ Vector3 EnemyBullet::GetWorldPosition() {
 
 	return worldPos;
 }
+
+void EnemyBullet::SetPlayer(Player* player) { player_ = player; }
