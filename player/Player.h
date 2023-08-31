@@ -42,6 +42,8 @@ public:
 
 	Vector3 Get3DWorldPosition();
 
+	bool IsDead() const { return isDead_; }
+
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
@@ -63,4 +65,7 @@ private:
 	Sprite* sprite2DReicle_ = nullptr;
 
 	ViewProjection viewProjection;
+
+		// デスフラグ
+	bool isDead_ = false;
 };

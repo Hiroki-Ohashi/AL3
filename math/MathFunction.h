@@ -32,3 +32,7 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
 Vector3 Transform(const Vector3& vecter, const Matrix4x4& matrix);
+// 球面線形補間
+Vector3 SLerp(const Vector3& v1, const Vector3& v2, float t);
+// 内績
+float Dot(const Vector3& v1, const Vector3& v2);

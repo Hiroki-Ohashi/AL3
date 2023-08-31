@@ -254,23 +254,21 @@ void Player::Update() {
 
 	worldTransform3DReticle_.UpdateMatrix();
 
-	// キャラクターの座標を画面表示する処理
-	ImGui::Begin("Player pos");
-	// float3入力ボックス
-	ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
-	// float3スライダー
-	ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -20.0f, 20.0f);
-	// テキスト
-	ImGui::Text("PlayerBullet : Space");
-	// テキスト
-	ImGui::Text("DebugCamera : Enter");
-	ImGui::End();
+	//// キャラクターの座標を画面表示する処理
+	//ImGui::Begin("Player pos");
+	//// float3入力ボックス
+	//ImGui::InputFloat3("InputFloat3", &worldTransform_.translation_.x);
+	//// float3スライダー
+	//ImGui::SliderFloat3("SliderFloat3", &worldTransform_.translation_.x, -20.0f, 20.0f);
+	//// テキスト
+	//ImGui::Text("PlayerBullet : Space");
+	//// テキスト
+	//ImGui::Text("DebugCamera : Enter");
+	//ImGui::End();
 }
 
 void Player::Draw(ViewProjection viewProjection_) {
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-
-	model_->Draw(worldTransform3DReticle_, viewProjection_);
 
 	// 弾描画
 	for (PlayerBullet* bullet : bullets_) {
@@ -341,7 +339,7 @@ void Player::Attack() {
 	}
 }
 
-void Player::OnCollision() {}
+void Player::OnCollision() { isDead_ = true; }
 
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ

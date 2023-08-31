@@ -12,7 +12,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	model_ = model;
 
 	// テクスチャ読み込み
-	textureHandle_ = TextureManager::Load("tama.png");
+	textureHandle_ = TextureManager::Load("green.png");
 
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
@@ -20,6 +20,11 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
+
+	// z方向に伸びた形状
+	worldTransform_.scale_.x = 0.3f;
+	worldTransform_.scale_.y = 0.3f;
+	worldTransform_.scale_.z = 1.0f;
 }
 
 void PlayerBullet::Update(){

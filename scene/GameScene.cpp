@@ -90,7 +90,9 @@ void GameScene::Update() {
 
 	UpdateEnemyPopCommands();
 
-	
+	if (input_->PushKey(DIK_A)) {
+		
+	}
 
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
@@ -105,6 +107,14 @@ void GameScene::Update() {
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	enemys_.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
 			return true;
 		}
 		return false;
@@ -173,7 +183,9 @@ void GameScene::Draw() {
 	skyDome_->Draw(viewProjection_);
 
 	// 自キャラの描画
-	player_->Draw(viewProjection_);
+	if (player_->IsDead() == false) {
+		player_->Draw(viewProjection_);
+	}
 
 	// 敵キャラの描画
 	for (Enemy* enemy : enemys_) {

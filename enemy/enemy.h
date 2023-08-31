@@ -52,6 +52,8 @@ public:
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
+	bool IsDead() const { return isDead_; }
+
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 
@@ -81,6 +83,8 @@ private:
 	Player* player_ = nullptr;
 	// ゲームシーン
 	GameScene* gameScene_ = nullptr;
+	// デスフラグ
+	bool isDead_ = false;
 
 	//// フェーズ
 	// Phase phase_ = Phase::Approach;

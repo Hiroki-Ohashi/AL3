@@ -4,6 +4,8 @@
 #include "WorldTransform.h"
 #include <cassert>
 
+class Player;
+
 class EnemyBullet {
 public:
 	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
@@ -18,6 +20,8 @@ public:
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	void SetPlayer(Player* player);
 
 private:
 	// ワールド変換データ
@@ -34,4 +38,6 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+	// 自機
+	Player* player_ = nullptr;
 };
