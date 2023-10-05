@@ -112,9 +112,9 @@
     <ClCompile Include="enemy\enemy.cpp" />
     <ClCompile Include="enemy\enemyBullet.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MathFunction.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerBullet.cpp" />
+    <ClCompile Include="math\MathFunction.cpp" />
+    <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="player\PlayerBullet.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
@@ -145,7 +145,7 @@
     <ClInclude Include="enemy\enemy.h" />
     <ClInclude Include="enemy\enemyBullet.h" />
     <ClInclude Include="input\Input.h" />
-    <ClInclude Include="MathFunction.h" />
+    <ClInclude Include="math\MathFunction.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />

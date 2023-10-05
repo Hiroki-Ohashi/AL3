@@ -21,7 +21,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	playerTh_ = TextureManager::Load("player.png");
+	playerTh_ = TextureManager::Load("Red.png");
 
 	enemyTh_ = TextureManager::Load("white1x1.png");
 
@@ -133,7 +133,7 @@ void GameScene::Draw() {
 
 	// 敵キャラの描画
 	if (enemy_ != nullptr) {
-		enemy_->Draw(viewProjection_);
+		//enemy_->Draw(viewProjection_);
 	}
 
 	// 3Dオブジェクト描画後処理
