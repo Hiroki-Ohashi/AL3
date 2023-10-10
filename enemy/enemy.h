@@ -52,6 +52,8 @@ public:
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
+	void SetScale(Vector3 scale) { worldTransform_.scale_ = scale; }
+
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 

@@ -28,6 +28,8 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 translation
 	ApproachInitialize();
 
 	state = new EnemyStateApproach();
+
+
 }
 
 Enemy::~Enemy() {
@@ -43,21 +45,21 @@ void Enemy::Move() {
 // void (Enemy::*Enemy::phasePFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
 
 void Enemy::Update() {
-	state->Update(this);
+	//state->Update(this);
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
 
-	attackTimer--;
+	//attackTimer--;
 
-	if (attackTimer <= 0) {
+	//if (attackTimer <= 0) {
 
-		// 攻撃処理
-		Attack();
+	//	// 攻撃処理
+	//	Attack();
 
-		// 発射タイマーを初期化
-		attackTimer = kFireInterval;
-	}
+	//	// 発射タイマーを初期化
+	//	attackTimer = kFireInterval;
+	//}
 
 	//// メンバ関数ポインタに入っている関数を呼び出す
 	//(this->*phasePFuncTable[0])();

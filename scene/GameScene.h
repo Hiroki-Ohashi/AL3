@@ -62,7 +62,7 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
-	void EnemySpown(Vector3);
+	void EnemySpown(Vector3, Vector3);
 
 	/// <summary>
 	///	敵:敵弾を追加する
@@ -112,6 +112,10 @@ private: // メンバ変数
 	int32_t waitTimer_;
 	// 待機フラグ
 	bool isWait_ = false;
+
+	float posX;
+	float posY;
+	float posZ;
 
 	// 敵発生コマンド
 	std::stringstream enemyPopCommands;

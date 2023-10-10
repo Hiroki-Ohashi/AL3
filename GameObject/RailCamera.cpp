@@ -3,24 +3,21 @@
 #include "ImGuiManager.h"
 
 void RailCamera::Initialize(Vector3 pos, Vector3 rot) { 
+	// ビュープロジェクションの初期化
+	viewProjection_.farZ = 10000.0f;
+	viewProjection_.Initialize();
 
 	// ワールドトランスフォームの初期設定
 	worldTransform_.translation_.x = pos.x;
 	worldTransform_.translation_.y = pos.y;
-	worldTransform_.translation_.z = pos.z - 10;
+	worldTransform_.translation_.z = pos.z - 50;
 
 	worldTransform_.rotation_ = rot;
-
-	
-
-	// ビュープロジェクションの初期化
-	viewProjection_.farZ = 10000.0f;
-	viewProjection_.Initialize();
 }
 
 void RailCamera::Update() { 
 
-	worldTransform_.translation_.z -= 0.1f;
+	//worldTransform_.translation_.z -= 0.1f;
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 

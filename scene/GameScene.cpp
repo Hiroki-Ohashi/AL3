@@ -28,16 +28,17 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
-	// ビュープロジェクションの初期化
-	viewProjection_.farZ = 10000.0f;
-	viewProjection_.Initialize();
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	playerTh_ = TextureManager::Load("player.png");
+	// ビュープロジェクションの初期化
+	viewProjection_.farZ = 10000.0f;
+	viewProjection_.Initialize();
 
-	enemyTh_ = TextureManager::Load("white1x1.png");
+	playerTh_ = TextureManager::Load("Red.png");
+
+	enemyTh_ = TextureManager::Load("player.png");
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
@@ -48,15 +49,15 @@ void GameScene::Initialize() {
 	// レールカメラの生成
 	railCamera_ = new RailCamera();
 	// レールカメラの初期化
-	railCamera_->Initialize({0, 0, 0}, {0, 0, 0});
+	railCamera_->Initialize({0, 0, -20}, {0, 0, 0});
 
 	// 自キャラの生成
 	player_ = new Player();
-	Vector3 playerPosition(0, 0, 30);
+	Vector3 playerPosition(0, 0, 0);
 	// 自キャラの初期化
 	player_->Initialize(model_, playerTh_, playerPosition);
 	// 自キャラとレールカメラの親子関係を結ぶ
-	player_->SetParent(&railCamera_->GetWorldTransform());
+	//player_->SetParent(&railCamera_->GetWorldTransform());
 
 	LoadEnemyPopData();
 
@@ -117,7 +118,7 @@ void GameScene::Update() {
 
 	// カメラの処理
 	if (isDebugCameraActive_) {
-
+		debugCamera_->SetFarZ(100000.0f);
 		// デバッグカメラの更新
 		debugCamera_->Update();
 
@@ -204,95 +205,32 @@ void GameScene::Draw() {
 	// 判定衝突AとBの座標
 	Vector3 posA, posB;
 
-	// 自弾リストの取得
-	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	// 敵弾リストの取得
-	const std::list<EnemyBullet*>& enemyBullets = enemyBullets_;
-
- #pragma region 自キャラと敵弾の当たり判定
+ #pragma region 自キャラと敵の当たり判定
 	// 自キャラの座標
 	posA = player_->GetWorldPosition();
 
-	// 自キャラと敵弾すべての当たり判定
-	for (EnemyBullet* bullet : enemyBullets) {
-		// 敵弾の座標
-		posB = bullet->GetWorldPosition();
+	// 自キャラと敵すべての当たり判定
+	for (Enemy* enemy : enemys_) {
+		// 敵の座標
+		posB = enemy->GetWorldPosition();
 
-		float p2eBX = (posB.x - posA.x) * (posB.x - posA.x);
-		float p2eBY = (posB.y - posA.y) * (posB.y - posA.y);
-		float p2eBZ = (posB.z - posA.z) * (posB.z - posA.z);
+		float p2eX = (posB.x - posA.x) * (posB.x - posA.x);
+		float p2eY = (posB.y - posA.y) * (posB.y - posA.y);
+		float p2eZ = (posB.z - posA.z) * (posB.z - posA.z);
 
 		float pRadius = 1;
-		float eBRadius = 1;
+		float eRadius = 1;
+ 
+		float L = (pRadius + eRadius) * (pRadius + eRadius);
 
-		float L = (pRadius + eBRadius) * (pRadius + eBRadius);
 
-		if (p2eBX + p2eBY + p2eBZ <= L) {
+
+		if (p2eX + p2eY + p2eZ <= L) {
 			// 自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision();
-			// 敵弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
 		}
 	}
 
- #pragma endregion
-
- #pragma region 自弾と敵キャラの当たり判定
-	// 敵キャラと自弾すべての当たり判定
-	for (PlayerBullet* bullet : playerBullets) {
-		for (Enemy* enemy : enemys_) {
-
-			// 敵キャラの座標
-			posA = enemy->GetWorldPosition();
-
-			// 自弾の座標
-			posB = bullet->GetWorldPosition();
-
-			float e2pBX = (posB.x - posA.x) * (posB.x - posA.x);
-			float e2pBY = (posB.y - posA.y) * (posB.y - posA.y);
-			float e2pBZ = (posB.z - posA.z) * (posB.z - posA.z);
-
-			const int eRadius = 1;
-			const int pBRadius = 1;
-
-			float L = (eRadius + pBRadius);
-
-			if (e2pBX + e2pBY + e2pBZ <= L) {
-				// 敵キャラの衝突時コールバックを呼び出す
-				enemy->OnCollision();
-				// 自弾の衝突時コールバックを呼び出す
-				bullet->OnCollision();
-			}
-		}
-	}
- #pragma endregion
-
- #pragma region 自弾と敵弾の当たり判定
-	// 敵弾と自弾すべての当たり判定
-	for (PlayerBullet* playerBullet : playerBullets) {
-		for (EnemyBullet* enemyBullet : enemyBullets) {
-			// 敵弾の座標
-			posA = playerBullet->GetWorldPosition();
-			// 自弾の座標
-			posB = enemyBullet->GetWorldPosition();
-
-			float pB2eBX = (posB.x - posA.x) * (posB.x - posA.x);
-			float pB2eBY = (posB.y - posA.y) * (posB.y - posA.y);
-			float pB2eBZ = (posB.z - posA.z) * (posB.z - posA.z);
-
-			float pBRadius = 1;
-			float eBRadius = 1;
-
-			float L = (pBRadius + eBRadius) * (pBRadius + eBRadius);
-
-			if (pB2eBX + pB2eBY + pB2eBZ <= L) {
-				// 自弾の衝突時コールバックを呼び出す
-				playerBullet->OnCollision();
-				// 敵弾の衝突時コールバックを呼び出す
-				enemyBullet->OnCollision();
-			}
-		}
-	}
  #pragma endregion
  }
 
@@ -310,16 +248,6 @@ void GameScene::LoadEnemyPopData() {
 }
 
  void GameScene::UpdateEnemyPopCommands() {
-
-	 // 待機処理
-	if (isWait_) {
-		waitTimer_--;
-		if (waitTimer_ <= 0) {
-			// 待機完了
-			isWait_ = false;
-		}
-		return;
-	}
 
 	 // 1行分の文字列を入れる変数
 	std::string line;
@@ -343,44 +271,47 @@ void GameScene::LoadEnemyPopData() {
 		if (word.find("POP") == 0) {
 			// X座標
 			getline(line_stream, word, ',');
-			float x = (float)std::atof(word.c_str());
+			posX = (float)std::atof(word.c_str());
 
 			// Y座標
 			getline(line_stream, word, ',');
-			float y = (float)std::atof(word.c_str());
+			posY = (float)std::atof(word.c_str());
 
 			// Z座標
 			getline(line_stream, word, ',');
-			float z = (float)std::atof(word.c_str());
-
-			// 敵を発生させる
-			EnemySpown(Vector3(x, y, z));
+			posZ = (float)std::atof(word.c_str());
 		}
 
-		// WAITコマンド
-		else if (word.find("WAIT") == 0) {
+		// SCALEコマンド
+		if (word.find("SCALE") == 0) {
+			// scaleX
 			getline(line_stream, word, ',');
+			float scaleX = (float)std::atof(word.c_str());
 
-			// 待ち時間
-			int32_t waitTime = atoi(word.c_str());
+			// scaleY
+			getline(line_stream, word, ',');
+			float scaleY = (float)std::atof(word.c_str());
 
-			// 待機開始
-			isWait_ = true;
-			waitTimer_ = waitTime;
+			// scaleZ
+			getline(line_stream, word, ',');
+			float scaleZ = (float)std::atof(word.c_str());
 
-			// コマンドループを抜ける
+			// 敵を発生させる
+			EnemySpown(Vector3(posX, posY, posZ), Vector3(scaleX, scaleY, scaleZ));
+
 			break;
 		}
 	}
  }
 
-void GameScene::EnemySpown(Vector3 translation) {
+void GameScene::EnemySpown(Vector3 translation, Vector3 scale) {
 	// 敵キャラの生成
 	Enemy* enemy_ = new Enemy();
 	// 敵キャラの初期化
 	enemy_->Initialize(model_, enemyTh_, translation);
 	// 敵キャラにゲームシーンを渡す
 	enemy_->SetGameScene(this);
+	enemy_->SetScale(scale);
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 	AddEnemy(enemy_);

@@ -118,7 +118,7 @@
     <ClCompile Include="GameObject\RailCamera.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="GameObject\Skydome.cpp" />
-    <ClCompile Include="WorldTransformEx.cpp" />
+    <ClCompile Include="3d\WorldTransformEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />

@@ -42,38 +42,12 @@ void Player::Update() {
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 
-	// キャラクターの移動速さ
-	const float kCharacterSpeed = 0.2f;
-	// 回転速さ[ラジアン/frame]
-	const float kRotSpeed = 0.02f;
-
-	// 回転処理
-	if (input_->PushKey(DIK_A)) {
-		worldTransform_.rotation_.y -= kRotSpeed;
-	} else if (input_->PushKey(DIK_D)) {
-		worldTransform_.rotation_.y += kRotSpeed;
-	}
+	move.y += kCharacterSpeedY;
+	move.x += kCharacterSpeedX;
 
 	// 押した方向で移動ベクトルを変更(左右)
-	if (input_->PushKey(DIK_LEFT)) {
-		move.x -= kCharacterSpeed;
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		move.x += kCharacterSpeed;
-	}
-
-	// 押した方向で移動ベクトルを変更(上下)
-	if (input_->PushKey(DIK_UP)) {
-		move.y -= kCharacterSpeed;
-	} else if (input_->PushKey(DIK_DOWN)) {
-		move.y += kCharacterSpeed;
-	}
-
-	// 攻撃処理
-	Attack();
-
-	// 弾更新
-	for (PlayerBullet* bullet : bullets_) {
-		bullet->Update();
+	if (input_->PushKey(DIK_SPACE)) {
+		move.y -= 0.4f;
 	}
 
 	// 座標移動(ベクトルの加算)
@@ -81,8 +55,8 @@ void Player::Update() {
 	worldTransform_.translation_.y -= move.y;
 
 	// 移動限界座標
-	const float kMoveLimitX = 34;
-	const float kMoveLimitY = 18;
+	const float kMoveLimitX = 70;
+	const float kMoveLimitY = 40;
 
 	// 範囲超えない処理
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
@@ -118,24 +92,12 @@ void Player::Draw(ViewProjection viewProjection_) {
 }
 
 void Player::Attack() { 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		// 弾の速度
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-
-		// 速度ベクトルを自機の向きに併せて回転させる
-		velocity = TransfomNormal(velocity, worldTransform_.matWorld_);
-
-		// 弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, GetWorldPosition(), velocity);
-
-		// 弾を登録
-		bullets_.push_back(newBullet);
-	}
 }
 
-void Player::OnCollision() {}
+void Player::OnCollision() { 
+	kCharacterSpeedX *= -1;
+}
+
 
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ
