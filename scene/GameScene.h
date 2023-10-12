@@ -15,6 +15,7 @@
 #include "Skydome.h"
 #include "enemy/enemy.h"
 #include "player/Player.h"
+#include "Block.h"
 
 /// <summary>
 /// ゲームシーン
@@ -65,10 +66,23 @@ public: // メンバ関数
 	void EnemySpown(Vector3, Vector3);
 
 	/// <summary>
+	/// ブロックデータの読み込み
+	/// </summary>
+	void LoadBlockPopData();
+
+	/// <summary>
+	/// ブロック発生コマンドの更新
+	/// </summary>
+	void UpdateBlockPopCommands();
+
+	void BlockSpown(Vector3, Vector3);
+
+	/// <summary>
 	///	敵:敵弾を追加する
 	/// </summary>
 	void AddEnemyBullet(EnemyBullet* enemyBullet);
 	void AddEnemy(Enemy* enemy);
+	void AddBlock(Block* block);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -97,6 +111,9 @@ private: // メンバ変数
 	// 敵キャラ
 	std::list<Enemy*> enemys_;
 
+	// ブロック
+	std::list<Block*> blocks_;
+
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
 
@@ -117,8 +134,15 @@ private: // メンバ変数
 	float posY;
 	float posZ;
 
+	float pos2X;
+	float pos2Y;
+	float pos2Z;
+
 	// 敵発生コマンド
 	std::stringstream enemyPopCommands;
+
+	// 敵発生コマンド
+	std::stringstream blockPopCommands;
 
 	/// <summary>
 	/// ゲームシーン用

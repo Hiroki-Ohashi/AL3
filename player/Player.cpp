@@ -40,19 +40,27 @@ void Player::Update() {
 	});
 
 	// キャラクターの移動ベクトル
-	Vector3 move = {0, 0, 0};
+	move = {0, 0.2f, 0};
 
-	move.y += kCharacterSpeedY;
 	move.x += kCharacterSpeedX;
+	
+	if (isHit) {
+		move.y = 0;
+		isHit = false;
+	}
 
 	// 押した方向で移動ベクトルを変更(左右)
 	if (input_->PushKey(DIK_SPACE)) {
-		move.y -= 0.4f;
+		move.y -= kCharacterSpeedY;
 	}
+	
+	
 
 	// 座標移動(ベクトルの加算)
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y -= move.y;
+
+	
 
 	// 移動限界座標
 	const float kMoveLimitX = 70;
@@ -98,6 +106,8 @@ void Player::OnCollision() {
 	kCharacterSpeedX *= -1;
 }
 
+void Player::OnCollisionY() { 
+	isHit = true; }
 
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ

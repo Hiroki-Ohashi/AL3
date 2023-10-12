@@ -109,6 +109,7 @@
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="enemy\enemy.cpp" />
     <ClCompile Include="enemy\enemyBullet.cpp" />
     <ClCompile Include="main.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="enemy\enemy.h" />
     <ClInclude Include="enemy\enemyBullet.h" />
     <ClInclude Include="input\Input.h" />

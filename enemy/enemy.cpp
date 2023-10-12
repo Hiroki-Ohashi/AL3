@@ -1,11 +1,7 @@
 #include "enemy/enemy.h"
 #include "ImGuiManager.h"
-#include "Input.h"
-#include "Model.h"
 #include "TextureManager.h"
-#include "WorldTransform.h"
 #include "enemy/enemyBullet.h"
-#include <cassert>
 #include <player/Player.h>
 #include "GameScene.h"
 

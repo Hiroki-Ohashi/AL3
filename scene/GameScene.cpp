@@ -25,6 +25,10 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
 	}
+
+	for (Block* block : blocks_) {
+		delete block;
+	}
 }
 
 void GameScene::Initialize() {
@@ -60,6 +64,7 @@ void GameScene::Initialize() {
 	//player_->SetParent(&railCamera_->GetWorldTransform());
 
 	LoadEnemyPopData();
+	LoadBlockPopData();
 
 	// 3Dモデルの生成
 	modelSkydome_ = Model::CreateFromOBJ("tenkyu", true);
@@ -87,11 +92,16 @@ void GameScene::Update() {
 	player_->Update();
 
 	UpdateEnemyPopCommands();
+	UpdateBlockPopCommands();
 
 	
 
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
+	}
+
+	for (Block* block : blocks_) {
+		block->Update();
 	}
 	
 	// 弾更新
@@ -178,6 +188,10 @@ void GameScene::Draw() {
 		enemy->Draw(viewProjection_);
 	}
 
+	for (Block* block : blocks_) {
+		block->Draw(viewProjection_);
+	}
+
 	// 弾描画
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection_);
@@ -228,6 +242,32 @@ void GameScene::Draw() {
 		if (p2eX + p2eY + p2eZ <= L) {
 			// 自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision();
+		}
+	}
+
+ #pragma endregion
+
+ #pragma region 自キャラとの当たり判定
+	// 自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	// 自キャラと敵すべての当たり判定
+	for (Block* block : blocks_) {
+		// 敵の座標
+		posB = block->GetWorldPosition();
+
+		float p2eX = (posB.x - posA.x) * (posB.x - posA.x);
+		float p2eY = (posB.y - posA.y) * (posB.y - posA.y);
+		float p2eZ = (posB.z - posA.z) * (posB.z - posA.z);
+
+		float pRadius = 1;
+		float eRadius = 1;
+
+		float L = (pRadius + eRadius) * (pRadius + eRadius);
+
+		if (p2eX + p2eY + p2eZ <= L) {
+			// 自キャラの衝突時コールバックを呼び出す
+			player_->OnCollisionY();
 		}
 	}
 
@@ -317,9 +357,97 @@ void GameScene::EnemySpown(Vector3 translation, Vector3 scale) {
 	AddEnemy(enemy_);
 }
 
+void GameScene::LoadBlockPopData() {
+	// ファイルを開く
+	std::ifstream file;
+	file.open("Resources/blockPop.csv");
+	assert(file.is_open());
+
+	// ファイルも内容を文字列ストリームにコピー
+	blockPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void GameScene::UpdateBlockPopCommands() {
+
+	// 1行分の文字列を入れる変数
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(blockPopCommands, line)) {
+		// 1行分の文字列をストリームに変換して解析しやすくなる
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// ,区切りで行の先頭文字列を取得
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// X座標
+			getline(line_stream, word, ',');
+			pos2X = (float)std::atof(word.c_str());
+
+			// Y座標
+			getline(line_stream, word, ',');
+			pos2Y = (float)std::atof(word.c_str());
+
+			// Z座標
+			getline(line_stream, word, ',');
+			pos2Z = (float)std::atof(word.c_str());
+		}
+
+		// SCALEコマンド
+		if (word.find("SCALE") == 0) {
+			// scaleX
+			getline(line_stream, word, ',');
+			float scaleX = (float)std::atof(word.c_str());
+
+			// scaleY
+			getline(line_stream, word, ',');
+			float scaleY = (float)std::atof(word.c_str());
+
+			// scaleZ
+			getline(line_stream, word, ',');
+			float scaleZ = (float)std::atof(word.c_str());
+
+			// 敵を発生させる
+			BlockSpown(Vector3(pos2X, pos2Y, pos2Z), Vector3(scaleX, scaleY, scaleZ));
+
+			break;
+		}
+	}
+}
+
+void GameScene::BlockSpown(Vector3 translation, Vector3 scale) {
+	// 敵キャラの生成
+	Block* block_ = new Block();
+	// 敵キャラの初期化
+	block_->Initialize(model_, enemyTh_, translation);
+	// 敵キャラにゲームシーンを渡す
+	block_->SetGameScene(this);
+	block_->SetScale(scale);
+	// 敵キャラに自キャラのアドレスを渡す
+	block_->SetPlayer(player_);
+	AddBlock(block_);
+}
+
 void GameScene::AddEnemy(Enemy* enemy) {
 	// リストに登録する
 	enemys_.push_back(enemy);
+}
+
+void GameScene::AddBlock(Block* block) {
+	// リストに登録する
+	blocks_.push_back(block);
 }
 
 void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
