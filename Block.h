@@ -5,9 +5,6 @@
 #include "WorldTransform.h"
 #include <cassert>
 
-class Player;
-class GameScene;
-
 class Block {
 public:
 	void Initialize(Model* model, uint32_t textureHandle, Vector3 translation);
@@ -21,25 +18,12 @@ public:
 
 	void OnCollision();
 
-	void SetPlayer(Player* player);
-
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
-
-	void SetScale(Vector3 scale) { worldTransform_.scale_ = scale; }
-
-	void SetType(bool type) { type_ = type; }
+	void SetType(float type) { type_ = type; }
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
-
-	//// 行動フェーズ
-	// enum class Phase {
-	//	Approach, // 接近する
-	//	Leave,    // 離脱する
-	// };
-
 	Vector3 GetWorldTransform() { return worldTransform_.translation_; }
-	bool GetType() { return type_; }
+	float GetType() { return type_; }
 
 private:
 	// ワールド変換データ0
@@ -48,16 +32,9 @@ private:
 	Model* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	// 自キャラ
-	Player* player_ = nullptr;
-	// ゲームシーン
-	GameScene* gameScene_ = nullptr;
 	// 速度
 	Vector3 velocity_;
-
-	bool type_ = 0;
-	//// フェーズ
-	// Phase phase_ = Phase::Approach;
-	//// メンバ関数ポインタのテーブル
-	// static void (Enemy::*phasePFuncTable[])();
+	// ブロックのタイプ
+	// 下が0、上が1、左右が2
+	float type_ = 0;
 };

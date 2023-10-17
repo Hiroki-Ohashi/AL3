@@ -13,7 +13,6 @@
 
 #include "RailCamera.h"
 #include "Skydome.h"
-#include "enemy/enemy.h"
 #include "player/Player.h"
 #include "Block.h"
 
@@ -56,14 +55,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 敵発生データの読み込み
 	/// </summary>
-	void LoadEnemyPopData();
 
 	/// <summary>
 	/// 敵発生コマンドの更新
 	/// </summary>
-	void UpdateEnemyPopCommands();
-
-	void EnemySpown(Vector3, Vector3);
 
 	/// <summary>
 	/// ブロックデータの読み込み
@@ -75,13 +70,11 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateBlockPopCommands();
 
-	void BlockSpown(Vector3, bool);
+	void BlockSpown(Vector3, float);
 
 	/// <summary>
 	///	敵:敵弾を追加する
 	/// </summary>
-	void AddEnemyBullet(EnemyBullet* enemyBullet);
-	void AddEnemy(Enemy* enemy);
 	void AddBlock(Block* block);
 
 private: // メンバ変数
@@ -108,14 +101,9 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	// 自キャラ
 	Player* player_ = nullptr;
-	// 敵キャラ
-	std::list<Enemy*> enemys_;
 
 	// ブロック
 	std::list<Block*> blocks_;
-
-	// 敵弾
-	std::list<EnemyBullet*> enemyBullets_;
 
 	// 天球
 	Skydome* skyDome_ = nullptr;
@@ -137,9 +125,6 @@ private: // メンバ変数
 	float pos2X;
 	float pos2Y;
 	float pos2Z;
-
-	// 敵発生コマンド
-	std::stringstream enemyPopCommands;
 
 	// 敵発生コマンド
 	std::stringstream blockPopCommands;

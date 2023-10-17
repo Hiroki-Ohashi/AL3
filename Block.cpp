@@ -37,8 +37,6 @@ void Block::Draw(const ViewProjection& viewProjection) {
 
 void Block::OnCollision() {}
 
-void Block::SetPlayer(Player* player) { player_ = player; }
-
 Vector3 Block::GetWorldPosition() {
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
