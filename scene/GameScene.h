@@ -75,7 +75,7 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateBlockPopCommands();
 
-	void BlockSpown(Vector3, Vector3);
+	void BlockSpown(Vector3, bool);
 
 	/// <summary>
 	///	敵:敵弾を追加する

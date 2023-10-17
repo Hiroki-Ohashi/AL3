@@ -31,7 +31,8 @@ public:
 	void Attack();
 
 	void OnCollision();
-	void OnCollisionY();
+	void OnCollisionUnderY();
+	void OnCollisionUpY();
 
 	void SetParent(const WorldTransform* parent);
 
@@ -57,6 +58,7 @@ private:
 	float kCharacterSpeedY = 0.4f;
 
 	bool isHit = false;
+	bool isHit2 = false;
 
 	Vector3 move;
 };

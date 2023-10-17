@@ -267,7 +267,13 @@ void GameScene::Draw() {
 
 		if (p2eX + p2eY + p2eZ <= L) {
 			// 自キャラの衝突時コールバックを呼び出す
-			player_->OnCollisionY();
+			if (block->GetType() == 0) {
+				player_->OnCollisionUnderY();
+			}
+			
+			if (block->GetType() == 1) {
+				player_->OnCollisionUpY();
+			}
 		}
 	}
 
@@ -406,35 +412,27 @@ void GameScene::UpdateBlockPopCommands() {
 		}
 
 		// SCALEコマンド
-		if (word.find("SCALE") == 0) {
+		if (word.find("TYPE") == 0) {
 			// scaleX
 			getline(line_stream, word, ',');
-			float scaleX = (float)std::atof(word.c_str());
-
-			// scaleY
-			getline(line_stream, word, ',');
-			float scaleY = (float)std::atof(word.c_str());
-
-			// scaleZ
-			getline(line_stream, word, ',');
-			float scaleZ = (float)std::atof(word.c_str());
+			bool type = (float)std::atof(word.c_str());
 
 			// 敵を発生させる
-			BlockSpown(Vector3(pos2X, pos2Y, pos2Z), Vector3(scaleX, scaleY, scaleZ));
+			BlockSpown(Vector3(pos2X, pos2Y, pos2Z), type);
 
 			break;
 		}
 	}
 }
 
-void GameScene::BlockSpown(Vector3 translation, Vector3 scale) {
+void GameScene::BlockSpown(Vector3 translation, bool type) {
 	// 敵キャラの生成
 	Block* block_ = new Block();
 	// 敵キャラの初期化
 	block_->Initialize(model_, enemyTh_, translation);
 	// 敵キャラにゲームシーンを渡す
 	block_->SetGameScene(this);
-	block_->SetScale(scale);
+	block_->SetType(type);
 	// 敵キャラに自キャラのアドレスを渡す
 	block_->SetPlayer(player_);
 	AddBlock(block_);

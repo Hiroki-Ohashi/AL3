@@ -41,12 +41,18 @@ void Player::Update() {
 
 	// キャラクターの移動ベクトル
 	move = {0, 0.2f, 0};
+	kCharacterSpeedY = 0.4f;
 
 	move.x += kCharacterSpeedX;
 	
 	if (isHit) {
 		move.y = 0;
 		isHit = false;
+	}
+
+	if (isHit2) {
+		kCharacterSpeedY = 0.2f;
+		isHit2 = false;
 	}
 
 	// 押した方向で移動ベクトルを変更(左右)
@@ -106,8 +112,12 @@ void Player::OnCollision() {
 	kCharacterSpeedX *= -1;
 }
 
-void Player::OnCollisionY() { 
-	isHit = true; }
+void Player::OnCollisionUnderY() {
+	isHit = true; 
+}
+
+void Player::OnCollisionUpY() { 
+	isHit2 = true; }
 
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ
