@@ -30,8 +30,8 @@ public:
 
 	void Attack();
 
-	void OnCollision();
-	void OnCollisionUnderY();
+	void OnCollisionX();
+	void OnCollisionY();
 	void OnCollisionUpY();
 
 	void SetParent(const WorldTransform* parent);
@@ -55,7 +55,9 @@ private:
 	std::list<PlayerBullet*> bullets_;
 	// キャラクターの移動速さ
 	float kCharacterSpeedX = 0.2f;
-	float kCharacterSpeedY = 0.4f;
+	float kCharacterSpeedY = 0.2f;
+
+	float kCharacterSpeed = 0.4f;
 
 	bool isHit = false;
 	bool isHit2 = false;

@@ -90,6 +90,7 @@ private: // メンバ変数
 	// テクスチャハンドル
 	uint32_t playerTh_;
 	uint32_t enemyTh_;
+	uint32_t damageTh_;
 
 	// スプライト
 	Sprite* sprite_ = nullptr;
