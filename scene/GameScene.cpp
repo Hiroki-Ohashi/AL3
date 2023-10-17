@@ -281,7 +281,9 @@ void GameScene::BlockSpown(Vector3 translation, float type) {
 	// ブロックの生成
 	Block* block_ = new Block();
 	// ブロックの初期化
-	block_->Initialize(model_, enemyTh_, translation);
+	if (type < 3) {
+		block_->Initialize(model_, enemyTh_, translation);
+	}
 	// ブロックのタイプ設定
 	block_->SetType(type);
 	AddBlock(block_);
