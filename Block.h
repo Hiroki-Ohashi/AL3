@@ -35,6 +35,6 @@ private:
 	// 速度
 	Vector3 velocity_;
 	// ブロックのタイプ
-	// 下が0、上が1、左右が2
+	// 上下が1、左右が2
 	float type_ = 0;
 };

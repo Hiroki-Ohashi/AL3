@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 
 	// 自キャラの生成
 	player_ = new Player();
-	Vector3 playerPosition(-38, 22, 0);
+	Vector3 playerPosition(-36, 20, 0);
 	// 自キャラの初期化
 	player_->Initialize(model_, playerTh_, playerPosition);
 	
@@ -188,21 +188,43 @@ void GameScene::Draw() {
 		// ブロックの座標
 		posB = block->GetWorldPosition();
 
-		float p2eX = (posB.x - posA.x) * (posB.x - posA.x);
+		/*float p2eX = (posB.x - posA.x) * (posB.x - posA.x);
 		float p2eY = (posB.y - posA.y) * (posB.y - posA.y);
 		float p2eZ = (posB.z - posA.z) * (posB.z - posA.z);
 
-		float pRadius = 1.1f;
-		float eRadius = 1.1f;
+		float pRadius = 1.0f;
+		float eRadius = 1.0f;
 
 		float L = (pRadius + eRadius) * (pRadius + eRadius);
 
 		if (p2eX + p2eY + p2eZ <= L) {
-			// 自キャラの衝突時コールバックを呼び出す
-			/*if (block->GetType() == 0) {
-				player_->OnCollisionUnderY();
-			}*/
-			
+		    if (block->GetType() == 1) {
+		        player_->OnCollisionY();
+		    }
+
+		    if (block->GetType() == 2) {
+		        player_->OnCollisionX();
+		    }
+		}*/
+
+		float leftA = posA.x;
+		float rightA = posA.x + 2.0f;
+		float topA = posA.y;
+		float bottomA = posA.y + 2.0f;
+		float nearA = posA.z;
+		float farA = posA.z + 2.0f;
+
+		float leftB = posB.x;
+		float rightB = posB.x + 2.0f;
+		float topB = posB.y;
+		float bottomB = posB.y + 2.0f;
+		float nearB = posB.z;
+		float farB = posB.z + 2.0f;
+
+		if (leftA <= rightB && leftB <= rightA &&
+			topA <= bottomB && topB <= bottomA &&
+			nearA <= farB && nearB <= farA) {
+
 			if (block->GetType() == 1) {
 				player_->OnCollisionY();
 			}
